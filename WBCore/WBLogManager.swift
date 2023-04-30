@@ -24,7 +24,7 @@ class WBLogManager: NSObject {
     }
     func clearLogs() {
         // since logs is not dynamic can't just do self.logs = []
-        self.setValue([], forKey: "logs")
+        self.setValue([] as [WBLog], forKey: "logs")
     }
     func deselectLogs() {
         self.logs.forEach{$0.isSelected = false}

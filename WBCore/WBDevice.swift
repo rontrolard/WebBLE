@@ -440,7 +440,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
             "vendorID": 0,
             "productID": 0,
             "productVersion": 0,
-            "uuids": []
+            "uuids": [] as [String],
         ]
         
         do {
