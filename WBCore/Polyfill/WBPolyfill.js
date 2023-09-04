@@ -53,6 +53,8 @@
 
   nslog('Create bluetooth');
   let bluetooth = {};
+
+  // MARK: - Global bluetooth functions
   bluetooth.requestDevice = function (requestDeviceOptions) {
     if (!requestDeviceOptions) {
       return Promise.reject(new TypeError('requestDeviceOptions not provided'));
@@ -106,6 +108,7 @@
     return await native.sendMessage('getAvailability');
   }
 
+  // MARK: - BluetoothEvent
   function BluetoothEvent(type, target) {
     wbutils.defineROProperties(this, {type, target, srcElement: target});
   }

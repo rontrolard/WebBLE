@@ -198,8 +198,11 @@ class WBTransaction: Equatable, CustomStringConvertible {
             return
         }
 
-        let commandString = "window.receiveMessageResponse(\(success ? "true" : "false"), \(object.jsonify()), \(self.id));\n"
-        NSLog("\(self.description) was \(success ? "successful" : "unsuccessful")")
+        let commandString = "window.receiveMessageResponse(\(success.jsonify()), \(object.jsonify()), \(self.id));\n"
+
+        if !success {
+            NSLog("\(self.description) unsuccessful: \(object.jsonify())")
+        }
 
         if let wv = self.webView {
             wv.evaluateJavaScript(commandString, completionHandler: {
