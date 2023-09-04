@@ -30,7 +30,7 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
 
     // MARK: - Embedded types
     enum ManagerRequests: String {
-        case device, requestDevice
+        case device, requestDevice, getAvailability
     }
 
     // MARK: - Properties
@@ -52,6 +52,17 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
      */
     var filters: [[String: AnyObject]]? = nil
     var pickerDevices = [WBDevice]()
+
+    var bluetoothAuthorized: Bool {
+        get {
+            switch CBCentralManager.authorization {
+            case CBManagerAuthorization.allowedAlways:
+                return true
+            default:
+                return false
+            }
+        }
+    }
 
     // MARK: - Constructors / destructors
     init(devicePicker: WBPicker) {
@@ -175,11 +186,15 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
 
             let devUUID = view.externalDeviceUUID
             guard let device = self.devicesByExternalUUID[devUUID]
-                else {
-                    transaction.resolveAsFailure(withMessage: "No known device for device transaction \(transaction)")
-                    break
+            else {
+                transaction.resolveAsFailure(
+                    withMessage: "No known device for device transaction \(transaction)"
+                )
+                break
             }
             device.triage(view)
+        case .getAvailability:
+            transaction.resolveAsSuccess(withObject: self.bluetoothAuthorized)
         case .requestDevice:
             guard transaction.key.typeComponents.count == 1
             else {

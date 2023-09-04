@@ -45,6 +45,11 @@ extension String: Jsonifiable {
         return "\"\(str)\""
     }
 }
+extension Bool: Jsonifiable {
+    func jsonify() -> String {
+        return self ? "true" : "false"
+    }
+}
 extension CBUUID: Jsonifiable {
     func jsonify() -> String {
         return "\"\(self.uuidString)\""

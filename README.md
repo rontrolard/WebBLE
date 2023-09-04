@@ -14,10 +14,11 @@ Others are available on the app store which provide varying levels of support / 
 > If you would like to add your distribution to this list then please send a PR, but it should provide some extra functionality over WebBLE and not just be a direct clone.
 
 
-## Supported APIs v1.0
+## Supported APIs v1.7
 
 ### `navigator.bluetooth`
 
+- `.getAvailability` added in 1.7
 - `.requestDevice(options)`
   - `options.acceptAllDevices = true` to ask for any device
   - `options.filters` is a list of filters (mutually exclusive with `acceptAllDevices`) with properties
