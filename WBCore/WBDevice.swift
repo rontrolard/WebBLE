@@ -290,6 +290,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
             self.connectTransactions.append(transaction)
 
         case .disconnectGATT:
+            NSLog("Disconnect GATT requested \(self)")
             self.handleDisconnect(tview)
 
         case .getPrimaryServices:
@@ -556,6 +557,11 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
                     characteristic
                 )}
         )
+    }
+
+    // MARK: - CustomStringConvertible
+    public override var description: String {
+        return "\(self.name ?? "<no-name>") (\(self.internalUUID))"
     }
 
     // MARK: - Private
