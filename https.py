@@ -36,14 +36,17 @@ You can then run this server like this:
 
     python3 https.py --port 4443 your-server.key your-server.cer
 
-By default this listens on all addresses, but you can specify a particular IP address to listen on
-by specifying --host <ip address>
+By default this listens to all addresses by using the ipv6 null address :: – this *also* listens
+for ipv4 connections (!).
 """
 import argparse
 import http.server
+import socket
 import ssl
 
 
+class HTTPServerV6(http.server.HTTPServer):
+    address_family = socket.AF_INET6
 
 
 if __name__ == '__main__':
@@ -54,12 +57,12 @@ if __name__ == '__main__':
     parser.add_argument('--port', type=int, default=4443)
     args = parser.parse_args()
 
-    print(f'Binding to {args.host}:{args.port}')
-    httpd = http.server.HTTPServer(
-        (args.host, args.port), http.server.SimpleHTTPRequestHandler
-    )
     print(f'Using keyfile {args.keyfile}')
     print(f'Using certificate {args.certfile}')
+    httpd = HTTPServerV6(
+        (args.host, args.port), http.server.SimpleHTTPRequestHandler
+    )
+    print(f'Listening on address {httpd.server_address}')
     context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
     context.load_cert_chain(args.certfile, keyfile=args.keyfile)
     httpd.socket = context.wrap_socket(httpd.socket, server_side=True)
