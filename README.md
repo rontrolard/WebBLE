@@ -18,7 +18,7 @@ Others are available on the app store which provide varying levels of support / 
 
 ### `navigator.bluetooth`
 
-- `.getAvailability` added in 1.7
+- `.getAvailability()` – added 1.7
 - `.requestDevice(options)`
   - `options.acceptAllDevices = true` to ask for any device
   - `options.filters` is a list of filters (mutually exclusive with `acceptAllDevices`) with properties
@@ -54,7 +54,9 @@ Others are available on the app store which provide varying levels of support / 
 - `.uuid`
 - `.value`
 - `.readValue()`
-- `.writeValue(value)`
+- `.writeValue(value)` (⚠️ but this is deprecated, prefer one of the below)
+- `.writeValueWithResponse(value)` – added 1.7
+- `.writeValueWithoutResponse(value)` – added 1.7
 - `.oncharacteristicvaluechanged: EventHandler`
 - `.startNotifications()`
 - `.stopNotifications()`
@@ -82,8 +84,6 @@ If you are maintaining your own release you can use those tests or write your ow
 #### End-to-end tests
 
 The [end-to-end "device" tests](DeviceTests/) are run semi-manually before WebBLE versions are released to the App Store. Some of these require real devices to be used to test with properly.
-
-If you are fixing 
 
 To run these tests you should set up a local certificate for testing with and run
 
