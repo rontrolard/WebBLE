@@ -80,6 +80,8 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
     }
     public func cancelDeviceSearch() {
         NSLog("User cancelled device selection")
+        // ⚠️ The user cancelled message is detected by the javascript layer to send the right
+        // error to the application, so it will need to be changed there as well if changing here.
         self.requestDeviceTransaction?.resolveAsFailure(withMessage: "User cancelled")
         self.stopScanForPeripherals()
         self._clearPickerView()

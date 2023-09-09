@@ -55,46 +55,52 @@
   let bluetooth = {};
 
   // MARK: - Global bluetooth functions
-  bluetooth.requestDevice = function (requestDeviceOptions) {
+  bluetooth.requestDevice = async function (requestDeviceOptions) {
     if (!requestDeviceOptions) {
-      return Promise.reject(new TypeError('requestDeviceOptions not provided'));
+      throw new TypeError('requestDeviceOptions not provided');
     }
     let acceptAllDevices = requestDeviceOptions.acceptAllDevices;
     let filters = requestDeviceOptions.filters;
+    let requestDevicePromise;
     if (acceptAllDevices) {
       if (filters && filters.length > 0) {
-        return Promise.reject(new TypeError('acceptAllDevices was true but filters was not empty'));
+        throw new TypeError('acceptAllDevices was true but filters was not empty');
       }
-      return native.sendMessage(
+      requestDevicePromise = native.sendMessage(
         'requestDevice', {data: {acceptAllDevices: true}}
-      ).then(function (device) {
-        return new wb.BluetoothDevice(device);
-      });
+      );
+    } else {
+      if (!filters || filters.length === 0) {
+        throw new TypeError('No filters provided and acceptAllDevices not set');
+      }
+      try {
+        filters = Array.prototype.map.call(filters, wbutils.canonicaliseFilter);
+      } catch (e) {
+        return Promise.reject(e);
+      }
+      let validatedDeviceOptions = {};
+      validatedDeviceOptions.filters = filters;
+
+      // Optional services not yet suppoprted.
+      // let optionalServices = requestDeviceOptions.optionalServices;
+      // if (optionalServices) {
+      //     optionalServices = optionalServices.services.map(window.BluetoothUUID.getService);
+      //     validatedDeviceOptions.optionalServices = optionalServices;
+      // }
+      requestDevicePromise = native.sendMessage(
+        'requestDevice',
+        {data: validatedDeviceOptions}
+      );
     }
 
-    if (!filters || filters.length === 0) {
-      return Promise.reject(new TypeError('No filters provided and acceptAllDevices not set'));
-    }
     try {
-      filters = Array.prototype.map.call(filters, wbutils.canonicaliseFilter);
-    } catch (e) {
-      return Promise.reject(e);
+      return new wb.BluetoothDevice(await requestDevicePromise);
+    } catch (error) {
+      if (error === 'User cancelled') {
+        throw new DOMException('User cancelled', 'NotFoundError');
+      }
+      throw error;
     }
-    let validatedDeviceOptions = {};
-    validatedDeviceOptions.filters = filters;
-
-    // Optional services not yet suppoprted.
-    // let optionalServices = requestDeviceOptions.optionalServices;
-    // if (optionalServices) {
-    //     optionalServices = optionalServices.services.map(window.BluetoothUUID.getService);
-    //     validatedDeviceOptions.optionalServices = optionalServices;
-    // }
-    return native.sendMessage(
-      'requestDevice',
-      {data: validatedDeviceOptions}
-    ).then(function (device) {
-      return new wb.BluetoothDevice(device);
-    });
   };
 
   bluetooth.getAvailability = async function () {
@@ -270,7 +276,7 @@
   };
   wb.native = native;
 
-  // Exposed interfaces
+  // MARK: - Exposed interfaces
   window.BluetoothRemoteGATTCharacteristic = wb.BluetoothRemoteGATTCharacteristic;
   window.BluetoothRemoteGATTServer = wb.BluetoothRemoteGATTServer;
   window.BluetoothRemoteGATTService = wb.BluetoothRemoteGATTService;
@@ -280,10 +286,10 @@
   window.receiveMessageResponse = native.receiveMessageResponse;
   window.receiveCharacteristicValueNotification = native.receiveCharacteristicValueNotification;
 
-  nslog('call enableBluetooth!')
+  nslog('call enableBluetooth!');
   native.enableBluetooth();
 
-  // Patches
+  // MARK: - Patches
   // Patch window.open so it doesn't attempt to open in a separate window or tab ever.
   function open(location) {
     window.location = location;
