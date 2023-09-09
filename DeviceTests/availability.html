@@ -1,0 +1,26 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Strict//EN">
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta charset="utf-8">
+<script src="jquery-1.12.0.js"></script>
+</head>
+<body>
+    <div><a href="..">Up ⬆️</a></div>
+    <h1>Availability tests</h1>
+    <p>Availability is <span id="availability-indicator"></span></p>
+    <p><button id="update-availability">Refresh availability</button></p>
+
+<script type="text/javascript">
+async function updateAvailability() {
+    const btAvailability = await navigator.bluetooth.getAvailability();
+    $('#availability-indicator').html(btAvailability ? "✅ available" : "🚫 not available");
+}
+
+$('#update-availability').on('click', () => {
+    updateAvailability();
+});
+updateAvailability();
+</script>
+</body>
+</html>

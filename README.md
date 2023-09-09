@@ -14,10 +14,11 @@ Others are available on the app store which provide varying levels of support / 
 > If you would like to add your distribution to this list then please send a PR, but it should provide some extra functionality over WebBLE and not just be a direct clone.
 
 
-## Supported APIs v1.0
+## Supported APIs v1.7
 
 ### `navigator.bluetooth`
 
+- `.getAvailability()` – added 1.7
 - `.requestDevice(options)`
   - `options.acceptAllDevices = true` to ask for any device
   - `options.filters` is a list of filters (mutually exclusive with `acceptAllDevices`) with properties
@@ -53,7 +54,9 @@ Others are available on the app store which provide varying levels of support / 
 - `.uuid`
 - `.value`
 - `.readValue()`
-- `.writeValue(value)`
+- `.writeValue(value)` (⚠️ but this is deprecated, prefer one of the below)
+- `.writeValueWithResponse(value)` – added 1.7
+- `.writeValueWithoutResponse(value)` – added 1.7
 - `.oncharacteristicvaluechanged: EventHandler`
 - `.startNotifications()`
 - `.stopNotifications()`
@@ -74,12 +77,23 @@ If you want to build and run locally, you just have to do the following:
 
 ### Testing
 
-The [end-to-end "device" tests](DeviceTests/) are run semi-manually before WebBLE versions are released to the App Store.
-
-> 💡 Just run a simple http server from the root of the codebase using e.g `python3 -m http.server` and navigate to your machine's address on your network to run these tests in webble on your iOS device
-
-Currently there are no unit tests... partly because it's time-consuming and difficult to write meaningful unit tests since there are three things to test: the javascript APIs, the native glue layer and the actual behaviour of a bluetooth device at the other end. Instead end-to-end tests which require some real devices to be used are hosted [here](https://www.greenparksoftware.co.uk/projects/webble/pucktest), and these tests are run / fixed before new versions of [WebBLE](https://apps.apple.com/gb/app/webble/id1193531073) are released to the App store.
-
 If you are maintaining your own release you can use those tests or write your own. If you want to spend the effort to start adding actual unit tests then that would be marvellous.
 
 > 💡 If you have a device you'd like me to add tests for please get in contact with me!
+
+#### End-to-end tests
+
+The [end-to-end "device" tests](DeviceTests/) are run semi-manually before WebBLE versions are released to the App Store. Some of these require real devices to be used to test with properly.
+
+To run these tests you should set up a local certificate for testing with and run
+
+```bash
+python3 https.py local-certificate-private-key.key local-certificate-public-cert.cer
+```
+
+See the docstring in https.py for instructions on settings up local certificates for testing (it's relatively straightforward...). You can also add an override in Info.plist to allow testing against a HTTP instead of an HTTPS server, but it's better just to create a local certificate.
+
+#### Xcode unit tests
+
+Currently there are no Xcode unit tests... partly because it's time-consuming and difficult to write meaningful unit tests since there are three things to test: the javascript APIs, the native glue layer and the actual behaviour of a bluetooth device at the other end. Instead the end-to-end tests are relied on for regression checking.
+

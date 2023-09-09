@@ -121,24 +121,31 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
     }
     
     class CharacteristicsView: ServiceTransactionView {
-
         override init?(transaction: WBTransaction) {
             super.init(transaction: transaction)
         }
     }
     
     class WriteCharacteristicView: CharacteristicView {
+        enum ResponseMode: String {
+            case optional, required, never
+        }
 
+        let responseMode: ResponseMode
         let data: Data
 
         override init?(transaction: WBTransaction) {
             guard
                 let dstr = transaction.messageData["value"] as? String,
-                let data = Data(base64Encoded: dstr)
+                let data = Data(base64Encoded: dstr),
+                let rmstr = transaction.messageData["responseMode"] as? String,
+                let responseMode = ResponseMode(rawValue: rmstr)
             else {
+                NSLog("Invalid WriteCharacteristic message \(transaction.messageData)")
                 return nil
             }
             self.data = data
+            self.responseMode = responseMode
             super.init(transaction: transaction)
         }
     }
@@ -290,6 +297,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
             self.connectTransactions.append(transaction)
 
         case .disconnectGATT:
+            NSLog("Disconnect GATT requested \(self)")
             self.handleDisconnect(tview)
 
         case .getPrimaryServices:
@@ -558,6 +566,11 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
         )
     }
 
+    // MARK: - CustomStringConvertible
+    public override var description: String {
+        return "\(self.name ?? "<no-name>") (\(self.internalUUID))"
+    }
+
     // MARK: - Private
     func handleDisconnect(_ tview: DeviceTransactionView) {
         guard let man = self.manager else {
@@ -642,15 +655,49 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
     }
 
     private func writeCharacteristicValue(_ char: CBCharacteristic, _ view: WriteCharacteristicView) {
-        if char.properties.contains(.write) {
-            self.peripheral.writeValue(view.data, for: char, type: CBCharacteristicWriteType.withResponse)
-            self.writeCharacteristicTM.addTransaction(view.transaction, atPath: CharacteristicTransactionKey(serviceUUID: view.serviceUUID, characteristicUUID: view.characteristicUUID))
-        } else if char.properties.contains(.writeWithoutResponse) {
-            self.peripheral.writeValue(view.data, for: char, type: CBCharacteristicWriteType.withoutResponse)
-            view.transaction.resolveAsSuccess()
-        } else {
-            view.transaction.resolveAsFailure(withMessage: "Characteristic does not support writing")
-            return
+
+        switch view.responseMode {
+        case .required:
+                guard char.properties.contains(.write) else {
+                    view.transaction.resolveAsFailure(withMessage: "Write with response not supported")
+                    return
+                }
+
+                self.peripheral.writeValue(view.data, for: char, type: .withResponse)
+                self.writeCharacteristicTM.addTransaction(
+                    view.transaction,
+                    atPath: CharacteristicTransactionKey(
+                        serviceUUID: view.serviceUUID, characteristicUUID: view.characteristicUUID
+                    )
+                )
+        case .never:
+                guard char.properties.contains(.write) || char.properties.contains(.writeWithoutResponse)
+                else {
+                    view.transaction.resolveAsFailure(
+                        withMessage: "Characteristic does not support writing"
+                    )
+                    return
+                }
+                self.peripheral.writeValue(view.data, for: char, type: .withoutResponse)
+                view.transaction.resolveAsSuccess()
+        case .optional:
+            // optional is in fact deprecated and the instructions are "Use any combination of the
+            // sub procedures" in webbluetoothcg.github.io/web-bluetooth/#writecharacteristicvalue
+            // so we do a write with response if possible else without.
+            if char.properties.contains(.write) {
+                self.peripheral.writeValue(view.data, for: char, type: .withResponse)
+                self.writeCharacteristicTM.addTransaction(
+                    view.transaction,
+                    atPath: CharacteristicTransactionKey(
+                        serviceUUID: view.serviceUUID, characteristicUUID: view.characteristicUUID
+                    )
+                )
+            } else if char.properties.contains(.writeWithoutResponse) {
+                self.peripheral.writeValue(view.data, for: char, type: .withoutResponse)
+                view.transaction.resolveAsSuccess()
+            } else {
+                view.transaction.resolveAsFailure(withMessage: "Characteristic does not support writing")
+            }
         }
     }
 }
