@@ -160,6 +160,7 @@ class WBWebViewContainerController: UIViewController, WKNavigationDelegate, WKUI
             let estimatedProgress = defChange[NSKeyValueChangeKey.newKey] as! Double
             let fwidth = self.loadingProgressContainer.frame.size.width
             let newWidth: CGFloat = CGFloat(estimatedProgress) * fwidth
+            print("estimatedProgress: \(estimatedProgress)")
             if newWidth < self.loadingProgressView.frame.size.width {
                 self.loadingProgressView.frame.size.width = newWidth
             } else {

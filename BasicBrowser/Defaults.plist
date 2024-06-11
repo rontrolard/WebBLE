@@ -32,9 +32,9 @@
 			</dict>
 			<dict>
 				<key>url</key>
-				<string>https://www.espruino.com/Puck.js</string>
+				<string>https://192.168.88.218:8443</string>
 				<key>title</key>
-				<string>Puck.js Home</string>
+				<string>Magrathea Student</string>
 			</dict>
 			<dict>
 				<key>url</key>

@@ -195,19 +195,9 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         self.loadPreferences()
 
         // Load last location
-        if let url = initialURL {
-            loadURL(url)
-        }
-        else {
-            var lastLocation: String
-            if let prefLoc = ud.value(forKey: WBWebViewContainerController.prefKeys.lastLocation.rawValue) as? String {
-            lastLocation = prefLoc
-            } else {
-                let svers = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
-                lastLocation = "https://www.greenparksoftware.co.uk/projects/webble/\(svers)"
-            }
-            self.loadLocation(lastLocation)
-        }
+        //let lastLocation: String = "https://192.168.88.218:8443/examinee"
+        let lastLocation: String = "https://clinical-wjv-qa.rsiapps.com/examinee"
+        self.loadLocation(lastLocation)
 
         // Maybe re-open console
         if ud.bool(forKey: prefKeys.consoleOpen.rawValue) {

@@ -72,6 +72,8 @@ class WBWebView: WKWebView, WKNavigationDelegate {
             + "\(bundleName)/\(shortVersionString) "
             + "(like Safari)"
         )
+        webCfg.allowsInlineMediaPlayback = true;
+        
 
         self.init(
             frame: CGRect(),
@@ -83,13 +85,14 @@ class WBWebView: WKWebView, WKNavigationDelegate {
         // Before configuring the WKWebView, delete caches since
         // it seems a bit arbitrary when this happens otherwise.
         // This from http://stackoverflow.com/a/34376943/5920499
-        let websiteDataTypes = NSSet(array: [WKWebsiteDataTypeDiskCache, WKWebsiteDataTypeMemoryCache]) as! Set<String>
-        let ds = WKWebsiteDataStore.default()
-        ds.removeData(
+        let websiteDataTypes = NSSet(array: [WKWebsiteDataTypeMemoryCache]) as! Set<String>
+        let ds = WKWebsiteDataStore.default();
+        
+        /*ds.removeData(
             ofTypes: websiteDataTypes,
             modifiedSince: NSDate(timeIntervalSince1970: 0) as Date,
             completionHandler:{})
-
+        */
         // Load js
         for jsfilename in [
             "stringview",
@@ -137,6 +140,12 @@ class WBWebView: WKWebView, WKNavigationDelegate {
     public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         self._navDelegates.forEach{$0.webView?(webView, didStartProvisionalNavigation: navigation)}
     }
+    public func webView(_ webView: WKWebView, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        guard let serverTrust = challenge.protectionSpace.serverTrust else { return completionHandler(.useCredential, nil) }
+        let exceptions = SecTrustCopyExceptions(serverTrust)
+        SecTrustSetExceptions(serverTrust, exceptions);
+        completionHandler(.useCredential, URLCredential(trust: serverTrust));
+    }
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         self._enableBluetoothInView()
@@ -147,6 +156,7 @@ class WBWebView: WKWebView, WKNavigationDelegate {
     }
 
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+        
         self._navDelegates.forEach{$0.webView?(webView, didFailProvisionalNavigation: navigation, withError: error)}
     }
 

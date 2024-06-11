@@ -25,8 +25,76 @@ protocol WBPicker {
     func updatePicker()
 }
 
-open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler, WBPopUpPickerViewDelegate
+open class WBManager: NSObject, 
+                        CBCentralManagerDelegate,
+                        CBPeripheralManagerDelegate,
+                        WKScriptMessageHandler,
+                        WBPopUpPickerViewDelegate
 {
+    private var service : CBUUID = CBUUID(string: "cafebabe-57ee-7033-f00f-a11ca75ea722")
+    
+    public func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
+        switch peripheral.state {
+            case .poweredOff:
+                peripheralManager.stopAdvertising();
+                break;
+            case .unknown:
+                print("Unknown")
+                break;
+            case .resetting:
+                print("Resetting")
+                break;
+            case .unsupported:
+                print("Unsurported")
+            return;
+            case .unauthorized:
+                print("Unauthorized")
+            return;
+            case .poweredOn:
+                print("Powered On")
+                break;
+            @unknown default:
+                print("Something else" + peripheral.state.rawValue.description)
+            return;
+        }
+        print("Current state");
+        print(peripheral.state);
+        
+        let studentInterfaceUUID = CBUUID.init() //CBUUID(string: "cafeBabe-57EE-7033-F00F-a11ca75ea711")
+        let studentChar = CBMutableCharacteristic(type: studentInterfaceUUID,
+                                            properties: [.notify, .write, .read],
+                                            value: nil, permissions: [.readable, .writeable])
+        
+        let myService =  CBMutableService(type: service, primary: true)
+        
+        myService.characteristics = [studentChar]
+        peripheralManager.add(myService)
+        peripheralManager.publishL2CAPChannel(withEncryption: true)
+        startAdvertising()
+
+    }
+    
+    public func peripheralManagerDidStartAdvertising(_ peripheral: CBPeripheralManager, error: (any Error)?) {
+        if let error = error {
+            print("Advertising fail: \(error)")
+            return;
+        }
+        print("Advertising working?")
+        
+    }
+    public func peripheralManager(
+        _ peripheral: CBPeripheralManager,
+        didPublishL2CAPChannel PSM: CBL2CAPPSM,
+        error: (any Error)?
+    ) {
+        
+    }
+    func startAdvertising() {
+        //messageLabel.text = "Advertising Data"
+        
+        peripheralManager.startAdvertising([CBAdvertisementDataLocalNameKey : "RSI Student Side", CBAdvertisementDataServiceUUIDsKey :     [service], description: "RSI Student"])
+        print("Started Advertising " + service.uuidString)
+    }
 
     // MARK: - Embedded types
     enum ManagerRequests: String {
@@ -36,6 +104,8 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
     // MARK: - Properties
     let debug = true
     let centralManager = CBCentralManager(delegate: nil, queue: nil)
+    var peripheralManager = CBPeripheralManager(delegate: nil, queue: nil);
+    
     var devicePicker: WBPicker
 
     /*! @abstract The devices selected by the user for use by this manager. Keyed by the UUID provided by the system. */
@@ -69,8 +139,8 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
         self.devicePicker = devicePicker
         super.init()
         self.centralManager.delegate = self
+        self.peripheralManager.delegate = self
     }
-    
     // MARK: - Public API
     public func selectDeviceAt(_ index: Int) {
         let device = self.pickerDevices[index]
