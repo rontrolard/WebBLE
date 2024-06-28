@@ -71,15 +71,52 @@ open class WBManager: NSObject,
         peripheralManager.add(myService)
         peripheralManager.publishL2CAPChannel(withEncryption: true)
         startAdvertising()
-
+        
     }
-    
+    public func peripheralManager(_ peripheral: CBPeripheralManager, didOpen channel: CBL2CAPChannel?, error: (any Error)?) {
+        print("Opened channel");
+    }
+    public func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveRead request: CBATTRequest) {
+        print("Got read request" + request.description);
+        let response = "Hey there".data(using: .utf8)
+        request.value = response;
+        peripheral.respond(to: request, withResult: .success)
+    }
+    public func peripheralManager(_ peripheral: CBPeripheralManager,
+                               central: CBCentral,
+                           didSubscribeTo characteristic: CBCharacteristic) {
+        peripheral.setDesiredConnectionLatency(.low, for: central);
+    }
+    public func peripheralManager(_ peripheral: CBPeripheralManager, didAdd service: CBService, error: (any Error)?) {
+        print("Got Add request" + service.description);
+    }
+    public func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveWrite requests: [CBATTRequest]) {
+        print("Got write request" + requests.description);
+        for req in requests {
+            //if req.characteristic != _controlCharacteristic {
+            //    continue
+            //}
+            guard let value = req.value else {
+                continue
+            }
+            //assert(req.offset == 0 && value.count == 1)
+            //ctrlCharacteristic.value = value
+            
+            let array = value.withUnsafeBytes() {
+                [UInt8](UnsafeBufferPointer(start: $0, count: value.count))
+            }
+            print(String(bytes: array, encoding: String.Encoding.utf8))
+            //_delegate.sending(byte != 0)
+        }
+        peripheral.respond(to: requests[0], withResult: .success)
+    }
     public func peripheralManagerDidStartAdvertising(_ peripheral: CBPeripheralManager, error: (any Error)?) {
         if let error = error {
             print("Advertising fail: \(error)")
             return;
         }
         print("Advertising working?")
+        
         
     }
     public func peripheralManager(
@@ -98,7 +135,7 @@ open class WBManager: NSObject,
 
     // MARK: - Embedded types
     enum ManagerRequests: String {
-        case device, requestDevice, getAvailability
+        case device, requestDevice, getAvailability, examineeReadMessage
     }
 
     // MARK: - Properties
@@ -156,10 +193,10 @@ open class WBManager: NSObject,
         self.stopScanForPeripherals()
         self._clearPickerView()
     }
-
+    
     // MARK: - WKScriptMessageHandler
     open func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-
+        
         guard let trans = WBTransaction(withMessage: message) else {
             /* The transaction will have handled the error */
             return
@@ -267,6 +304,8 @@ open class WBManager: NSObject,
             device.triage(view)
         case .getAvailability:
             transaction.resolveAsSuccess(withObject: self.bluetoothAuthorized)
+        case .examineeReadMessage:
+            print("Examinee read message");
         case .requestDevice:
             guard transaction.key.typeComponents.count == 1
             else {

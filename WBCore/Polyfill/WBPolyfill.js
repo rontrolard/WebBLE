@@ -53,7 +53,11 @@
 
   nslog('Create bluetooth');
   let bluetooth = {};
-
+  
+  bluetooth.examineeReadMessage = async function () {
+    await native.sendMessage("examineeReadMessage");
+    
+  }
   // MARK: - Global bluetooth functions
   bluetooth.requestDevice = async function (requestDeviceOptions) {
     if (!requestDeviceOptions) {
@@ -295,5 +299,6 @@
     window.location = location;
   }
   window.open = open;
+  navigator.bluetooth.examineeReadMessage();
   nslog('WBPolyfill complete');
 }());
