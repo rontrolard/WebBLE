@@ -300,5 +300,6 @@
   }
   window.open = open;
   navigator.bluetooth.examineeReadMessage();
+  native.sendMessage("Test");
   nslog('WBPolyfill complete');
 }());

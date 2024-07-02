@@ -32,7 +32,7 @@ open class WBManager: NSObject,
                         WBPopUpPickerViewDelegate
 {
     private var service : CBUUID = CBUUID(string: "cafebabe-57ee-7033-f00f-a11ca75ea722")
-    
+    private var requestCounter : Int = 0;
     public func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
         switch peripheral.state {
             case .poweredOff:
@@ -78,7 +78,8 @@ open class WBManager: NSObject,
     }
     public func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveRead request: CBATTRequest) {
         print("Got read request" + request.description);
-        let response = "Hey there".data(using: .utf8)
+        requestCounter+=1;
+        let response = ("Hey there \(self.requestCounter)").data(using: .utf8)
         request.value = response;
         peripheral.respond(to: request, withResult: .success)
     }
@@ -196,7 +197,7 @@ open class WBManager: NSObject,
     
     // MARK: - WKScriptMessageHandler
     open func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        
+        print("**** _ " + message.name);
         guard let trans = WBTransaction(withMessage: message) else {
             /* The transaction will have handled the error */
             return
