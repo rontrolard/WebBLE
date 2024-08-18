@@ -98,7 +98,7 @@ class WBWebViewContainerController: UIViewController, WKNavigationDelegate, WKUI
     }
     
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        self._maybeShowErrorUI(error)
+        //self._maybeShowErrorUI(error)
     }
     
     // MARK: - WKUIDelegate
@@ -188,6 +188,7 @@ class WBWebViewContainerController: UIViewController, WKNavigationDelegate, WKUI
         ) {
             return
         }
-        self.performSegue(withIdentifier: "nav-error-segue", sender: error)
+        return;
+        //self.performSegue(withIdentifier: "nav-error-segue", sender: error)
     }
 }
