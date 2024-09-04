@@ -33,7 +33,11 @@ open class WBManager: NSObject,
 {
     private var service : CBUUID = CBUUID(string: "cafebabe-57ee-7033-f00f-a11ca75ea722")
     private var requestCounter : Int = 0;
-    private var currentWebView: WKWebView;
+    private var lastData : String?;
+    private var currentWebView: WKWebView?;
+    private var studentCharacteristic: CBMutableCharacteristic = CBMutableCharacteristic(type: CBUUID.init(),
+                                                                                         properties: [.notify, .write, .read, .writeWithoutResponse],
+                                                                                         value: nil, permissions: [.readable, .writeable]);
     public func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
         switch peripheral.state {
             case .poweredOff:
@@ -60,15 +64,10 @@ open class WBManager: NSObject,
         }
         print("Current state");
         print(peripheral.state);
-        
-        let studentInterfaceUUID = CBUUID.init() //CBUUID(string: "cafeBabe-57EE-7033-F00F-a11ca75ea711")
-        let studentChar = CBMutableCharacteristic(type: studentInterfaceUUID,
-                                            properties: [.notify, .write, .read],
-                                            value: nil, permissions: [.readable, .writeable])
-        
+                
         let myService =  CBMutableService(type: service, primary: true)
         
-        myService.characteristics = [studentChar]
+        myService.characteristics = [studentCharacteristic]
         peripheralManager.add(myService)
         peripheralManager.publishL2CAPChannel(withEncryption: true)
         startAdvertising()
@@ -80,6 +79,12 @@ open class WBManager: NSObject,
     public func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveRead request: CBATTRequest) {
         print("Got read request" + request.description);
         requestCounter+=1;
+        if let lastString = lastData {
+            request.value = lastString.data(using: .utf8);
+            peripheral.respond(to: request, withResult: .success)
+            lastData = nil;
+            return;
+        }
         let response = ("Message from \(UIDevice.current.name) \(UIDevice.current.systemName) - \(self.requestCounter) battery: \(UIDevice.current.batteryLevel)").data(using: .utf8);
         
         request.value = response;
@@ -92,7 +97,9 @@ open class WBManager: NSObject,
     }
     public func peripheralManager(_ peripheral: CBPeripheralManager, didAdd service: CBService, error: (any Error)?) {
         print("Got Add request" + service.description);
+        //self.currentWebView.evaluateJavaScript("")
     }
+    
     public func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveWrite requests: [CBATTRequest]) {
         print("Got write request" + requests.description);
         for req in requests {
@@ -104,17 +111,23 @@ open class WBManager: NSObject,
             }
             //assert(req.offset == 0 && value.count == 1)
             //ctrlCharacteristic.value = value
-            
             let array = value.withUnsafeBytes() {
                 [UInt8](UnsafeBufferPointer(start: $0, count: value.count))
             }
-            let recievedData = String(bytes: array, encoding: String.Encoding.utf8)
+            let recievedData = String(bytes: array, encoding: String.Encoding.utf8);
+            if let realData = recievedData {
+                if let webView = self.currentWebView {
+                    webView.evaluateJavaScript("window.serverConnection.dispatchMessage(JSON.parse('" + realData + "'))")
+                    //webView.evaluateJavaScript("alert('" + realData + "')");
+                }
+                print(realData);
+            }
             
-            print(recievedData);
             //_delegate.sending(byte != 0)
         }
         peripheral.respond(to: requests[0], withResult: .success)
     }
+    
     public func peripheralManagerDidStartAdvertising(_ peripheral: CBPeripheralManager, error: (any Error)?) {
         if let error = error {
             print("Advertising fail: \(error)")
@@ -140,7 +153,7 @@ open class WBManager: NSObject,
 
     // MARK: - Embedded types
     enum ManagerRequests: String {
-        case device, requestDevice, getAvailability, examineeReadMessage
+        case device, requestDevice, getAvailability, examineeReadMessage, postMessage
     }
 
     // MARK: - Properties
@@ -309,8 +322,20 @@ open class WBManager: NSObject,
             device.triage(view)
         case .getAvailability:
             transaction.resolveAsSuccess(withObject: self.bluetoothAuthorized)
+        case .postMessage:
+            if let webView = transaction.webView {
+                self.currentWebView = webView;
+                //webView.evaluateJavaScript("window.serverConnection.dispatchMessage(JSON.parse(`\(transaction.messageData)`))");
+                let sval = "\(transaction.messageData)".data(using: .utf8);
+                studentCharacteristic.value = sval;
+                lastData = "\(transaction.messageData)";
+                
+            }
+
         case .examineeReadMessage:
-            self.currentWebView = transaction.webView.unsafelyUnwrapped;
+            if let wbview = transaction.webView {
+                self.currentWebView = wbview;
+            }
             print("Examinee read message");
         case .requestDevice:
             guard transaction.key.typeComponents.count == 1

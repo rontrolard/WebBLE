@@ -56,7 +56,9 @@
   
   bluetooth.examineeReadMessage = async function () {
     await native.sendMessage("examineeReadMessage");
-    
+  }
+  bluetooth.postMessage = async function(data) {
+    await native.sendMessage("postMessage", { data: data} );
   }
   // MARK: - Global bluetooth functions
   bluetooth.requestDevice = async function (requestDeviceOptions) {

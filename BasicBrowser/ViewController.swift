@@ -195,8 +195,8 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         self.loadPreferences()
 
         // Load last location
-        //let lastLocation: String = "https://192.168.88.218:8443/examinee"
-        let lastLocation: String = "https://clinical-wjv-qa.rsiapps.com/examinee"
+        let lastLocation: String = "https://192.168.88.218:8443/examinee"
+        //let lastLocation: String = "https://clinical-wjv-qa.rsiapps.com/examinee"
         self.loadLocation(lastLocation)
 
         // Maybe re-open console
