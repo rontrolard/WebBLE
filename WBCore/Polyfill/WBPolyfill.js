@@ -58,7 +58,7 @@
     await native.sendMessage("examineeReadMessage");
   }
   bluetooth.postMessage = async function(data) {
-    await native.sendMessage("postMessage", { data: data} );
+    await native.sendMessage("postMessage", { json: JSON.stringify(data) } );
   }
   // MARK: - Global bluetooth functions
   bluetooth.requestDevice = async function (requestDeviceOptions) {
@@ -156,19 +156,21 @@
     },
     sendMessage: function (type, sendMessageParms) {
       let message;
+      console.log(sendMessageParms);
       if (type === undefined) {
         throw new Error('CallRemote should never be called without a type!');
       }
 
       sendMessageParms = sendMessageParms || {};
       let data = sendMessageParms.data || {};
+      let json = sendMessageParms.json || "";
       let callbackID = sendMessageParms.callbackID || this.getTransactionID();
       message = {
         type: type,
         data: data,
+        json: json,
         callbackID: callbackID
       };
-
       nslog(`${type} ${callbackID}`);
       window.webkit.messageHandlers.bluetooth.postMessage(message);
 

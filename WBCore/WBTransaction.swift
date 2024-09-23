@@ -121,6 +121,7 @@ class WBTransaction: Equatable, CustomStringConvertible {
     let id: Int
     let key: Key
     let messageData: [String: AnyObject]
+    let jsonData: String
     /*! @abstract The web view that initiated this transaction, and where we can send the response.
      */
     weak var webView: WKWebView?
@@ -134,11 +135,12 @@ class WBTransaction: Equatable, CustomStringConvertible {
     /*
      * ========== Initializers ==========
      */
-    init(id: Int, typeComponents: [String], messageData: [String: AnyObject], webView: WKWebView?){
+    init(id: Int, typeComponents: [String], messageData: [String: AnyObject], webView: WKWebView?, jsonData: String){
         self.id = id
         self.key = Key(typeComponents: typeComponents)
         self.messageData = messageData
         self.webView = webView
+        self.jsonData = jsonData
     }
     convenience init?(withMessage message: WKScriptMessage) {
 
@@ -146,6 +148,7 @@ class WBTransaction: Equatable, CustomStringConvertible {
             let messageBody = message.body as? NSDictionary,
             let id = messageBody["callbackID"] as? Int,
             let typeString = messageBody["type"] as? String,
+            let jsonString = messageBody["json"] as? String,
             let messageData = messageBody["data"] as? [String: AnyObject] else {
                 NSLog("Bad WebKit request received \(message.body)")
                 message.webView?.evaluateJavaScript(
@@ -154,7 +157,7 @@ class WBTransaction: Equatable, CustomStringConvertible {
                 return nil
         }
         let typeComponents = typeString.components(separatedBy: ":")
-        self.init(id: id, typeComponents: typeComponents, messageData: messageData, webView: message.webView)
+        self.init(id: id, typeComponents: typeComponents, messageData: messageData, webView: message.webView, jsonData: jsonString)
     }
 
     /*

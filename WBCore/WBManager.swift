@@ -36,7 +36,7 @@ open class WBManager: NSObject,
     private var lastData : String?;
     private var currentWebView: WKWebView?;
     private var studentCharacteristic: CBMutableCharacteristic = CBMutableCharacteristic(type: CBUUID.init(),
-                                                                                         properties: [.notify, .write, .read, .writeWithoutResponse],
+                                                                                         properties: [.notify, .write, .read ],
                                                                                          value: nil, permissions: [.readable, .writeable]);
     public func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
         switch peripheral.state {
@@ -85,10 +85,10 @@ open class WBManager: NSObject,
             lastData = nil;
             return;
         }
-        let response = ("Message from \(UIDevice.current.name) \(UIDevice.current.systemName) - \(self.requestCounter) battery: \(UIDevice.current.batteryLevel)").data(using: .utf8);
+        /*let response = ("Message from \(UIDevice.current.name) \(UIDevice.current.systemName) - \(self.requestCounter) battery: \(UIDevice.current.batteryLevel)").data(using: .utf8);
         
-        request.value = response;
-        peripheral.respond(to: request, withResult: .success)
+        request.value = response;*/
+        //peripheral.respond(to: request, withResult: .attributeNotFound)
     }
     public func peripheralManager(_ peripheral: CBPeripheralManager,
                                central: CBCentral,
@@ -214,7 +214,6 @@ open class WBManager: NSObject,
     
     // MARK: - WKScriptMessageHandler
     open func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        print("**** _ " + message.name);
         guard let trans = WBTransaction(withMessage: message) else {
             /* The transaction will have handled the error */
             return
@@ -326,10 +325,12 @@ open class WBManager: NSObject,
             if let webView = transaction.webView {
                 self.currentWebView = webView;
                 //webView.evaluateJavaScript("window.serverConnection.dispatchMessage(JSON.parse(`\(transaction.messageData)`))");
-                let sval = "\(transaction.messageData)".data(using: .utf8);
+                let currentData = "\(transaction.jsonData)";
+                let sval = currentData.data(using: .utf8);
                 studentCharacteristic.value = sval;
-                lastData = "\(transaction.messageData)";
                 
+                lastData = currentData;
+                print(currentData);
             }
 
         case .examineeReadMessage:
