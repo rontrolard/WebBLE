@@ -20,6 +20,7 @@
 
 import Foundation
 import UIKit
+@preconcurrency
 import WebKit
 
 class WBWebView: WKWebView, WKNavigationDelegate {
@@ -85,10 +86,11 @@ class WBWebView: WKWebView, WKNavigationDelegate {
         // Before configuring the WKWebView, delete caches since
         // it seems a bit arbitrary when this happens otherwise.
         // This from http://stackoverflow.com/a/34376943/5920499
-        let websiteDataTypes = NSSet(array: [WKWebsiteDataTypeMemoryCache]) as! Set<String>
+        /*
+         let websiteDataTypes = NSSet(array: [WKWebsiteDataTypeMemoryCache]) as! Set<String>
         let ds = WKWebsiteDataStore.default();
         
-        /*ds.removeData(
+        ds.removeData(
             ofTypes: websiteDataTypes,
             modifiedSince: NSDate(timeIntervalSince1970: 0) as Date,
             completionHandler:{})
@@ -124,7 +126,7 @@ class WBWebView: WKWebView, WKNavigationDelegate {
 
         // WKWebView static config
         self.translatesAutoresizingMaskIntoConstraints = false
-        self.allowsBackForwardNavigationGestures = true
+        self.allowsBackForwardNavigationGestures = false
     }
 
     // MARK: - API

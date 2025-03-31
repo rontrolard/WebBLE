@@ -319,7 +319,7 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftMigration = 0720;
 				LastSwiftUpdateCheck = 1250;
-				LastUpgradeCheck = 1540;
+				LastUpgradeCheck = 1620;
 				TargetAttributes = {
 					E44C18551A36203E00734F8B = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -466,6 +466,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -523,6 +524,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -587,7 +589,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.7.0;
-				PRODUCT_BUNDLE_IDENTIFIER = co.uk.greenparksoftware.webble;
+				PRODUCT_BUNDLE_IDENTIFIER = com.riversideinsights.offlineAdmin;
 				PRODUCT_NAME = WebBLE;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -609,7 +611,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.7.0;
-				PRODUCT_BUNDLE_IDENTIFIER = co.uk.greenparksoftware.webble;
+				PRODUCT_BUNDLE_IDENTIFIER = com.riversideinsights.offlineAdmin;
 				PRODUCT_NAME = WebBLE;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

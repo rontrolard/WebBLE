@@ -38,6 +38,9 @@ open class WBManager: NSObject,
     private var studentCharacteristic: CBMutableCharacteristic = CBMutableCharacteristic(type: CBUUID.init(),
                                                                                          properties: [.notify, .write, .read ],
                                                                                          value: nil, permissions: [.readable, .writeable]);
+    private var streamingCharacteristic: CBMutableCharacteristic = CBMutableCharacteristic(type: CBUUID.init(),
+                                                                                           properties: [.write, .read ],
+                                                                                           value: nil, permissions: [.readable, .writeable ]);
     public func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
         switch peripheral.state {
             case .poweredOff:
@@ -76,8 +79,10 @@ open class WBManager: NSObject,
     public func peripheralManager(_ peripheral: CBPeripheralManager, didOpen channel: CBL2CAPChannel?, error: (any Error)?) {
         print("Opened channel");
     }
+    
     public func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveRead request: CBATTRequest) {
-        print("Got read request" + request.description);
+        print("Got read request " + request.description);
+        
         requestCounter+=1;
         if let lastString = lastData {
             request.value = lastString.data(using: .utf8);
@@ -88,7 +93,7 @@ open class WBManager: NSObject,
         /*let response = ("Message from \(UIDevice.current.name) \(UIDevice.current.systemName) - \(self.requestCounter) battery: \(UIDevice.current.batteryLevel)").data(using: .utf8);
         
         request.value = response;*/
-        //peripheral.respond(to: request, withResult: .attributeNotFound)
+        peripheral.respond(to: request, withResult: .success)
     }
     public func peripheralManager(_ peripheral: CBPeripheralManager,
                                central: CBCentral,
@@ -111,10 +116,18 @@ open class WBManager: NSObject,
             }
             //assert(req.offset == 0 && value.count == 1)
             //ctrlCharacteristic.value = value
-            let array = value.withUnsafeBytes() {
-                [UInt8](UnsafeBufferPointer(start: $0, count: value.count))
+            let recievedData = String(data: value, encoding: .utf8)!
+            if let webView = self.currentWebView {
+                webView.evaluateJavaScript("window.serverConnection.dispatchMessage(JSON.parse('" + recievedData + "'))")
+                //webView.evaluateJavaScript("alert('" + realData + "')");
             }
-            let recievedData = String(bytes: array, encoding: String.Encoding.utf8);
+            print(recievedData);
+            /*let array = value.withUnsafeBytes {
+                $0.load(as: UInt8.self)
+                //[UInt8](UnsafeBufferPointer(start: $0, count: value.count))
+            }
+            let recievedData = String(bytes: array, encoding: String.Encoding.utf8);*/
+            /*
             if let realData = recievedData {
                 if let webView = self.currentWebView {
                     webView.evaluateJavaScript("window.serverConnection.dispatchMessage(JSON.parse('" + realData + "'))")
@@ -122,7 +135,7 @@ open class WBManager: NSObject,
                 }
                 print(realData);
             }
-            
+            */
             //_delegate.sending(byte != 0)
         }
         peripheral.respond(to: requests[0], withResult: .success)

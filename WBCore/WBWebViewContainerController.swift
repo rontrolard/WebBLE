@@ -6,6 +6,7 @@
 //
 
 import UIKit
+@preconcurrency
 import WebKit
 
 protocol ConsoleToggler {
