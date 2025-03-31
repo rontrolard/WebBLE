@@ -86,7 +86,7 @@ class WBWebView: WKWebView, WKNavigationDelegate {
         // Before configuring the WKWebView, delete caches since
         // it seems a bit arbitrary when this happens otherwise.
         // This from http://stackoverflow.com/a/34376943/5920499
-        /*
+        
          let websiteDataTypes = NSSet(array: [WKWebsiteDataTypeMemoryCache]) as! Set<String>
         let ds = WKWebsiteDataStore.default();
         
@@ -94,7 +94,7 @@ class WBWebView: WKWebView, WKNavigationDelegate {
             ofTypes: websiteDataTypes,
             modifiedSince: NSDate(timeIntervalSince1970: 0) as Date,
             completionHandler:{})
-        */
+        
         // Load js
         for jsfilename in [
             "stringview",

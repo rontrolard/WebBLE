@@ -82,7 +82,9 @@ open class WBManager: NSObject,
     
     public func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveRead request: CBATTRequest) {
         print("Got read request " + request.description);
-        
+        if let webView = self.currentWebView {
+            webView.evaluateJavaScript("window.serverConnection.externalBluetoothConnected = true");
+        }
         requestCounter+=1;
         if let lastString = lastData {
             request.value = lastString.data(using: .utf8);
@@ -93,7 +95,7 @@ open class WBManager: NSObject,
         /*let response = ("Message from \(UIDevice.current.name) \(UIDevice.current.systemName) - \(self.requestCounter) battery: \(UIDevice.current.batteryLevel)").data(using: .utf8);
         
         request.value = response;*/
-        peripheral.respond(to: request, withResult: .success)
+        peripheral.respond(to: request, withResult: .attributeNotFound)
     }
     public func peripheralManager(_ peripheral: CBPeripheralManager,
                                central: CBCentral,
@@ -107,6 +109,9 @@ open class WBManager: NSObject,
     
     public func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveWrite requests: [CBATTRequest]) {
         print("Got write request" + requests.description);
+        if let webView = self.currentWebView {
+            webView.evaluateJavaScript("window.serverConnection.externalBluetoothConnected = true");
+        }
         for req in requests {
             //if req.characteristic != _controlCharacteristic {
             //    continue
@@ -277,6 +282,10 @@ open class WBManager: NSObject,
                 NSLog("Unexpected didDisconnect notification for unknown device \(peripheral.name ?? "<no-name>") \(peripheral.identifier)")
                 return
         }
+        if let webView = self.currentWebView {
+            webView.evaluateJavaScript("window.serverConnection.externalBluetoothConnected = false");
+        }
+
         device.didDisconnect(error: error)
         self.devicesByInternalUUID[peripheral.identifier] = nil
         self.devicesByExternalUUID[device.deviceId] = nil
