@@ -114,7 +114,7 @@
 		BB303DF21C42070C00FCAF24 /* WBManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBManager.swift; sourceTree = "<group>"; };
 		BB4DBE641C97F577000D2C35 /* WBTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBTransaction.swift; sourceTree = "<group>"; };
 		BB4DE1F31C8D0A44003151BF /* WBDevice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBDevice.swift; sourceTree = "<group>"; };
-		E44C18561A36203E00734F8B /* WebBLE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WebBLE.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E44C18561A36203E00734F8B /* RiversideScoreOffline.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RiversideScoreOffline.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E44C185A1A36203E00734F8B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E44C185B1A36203E00734F8B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E44C185D1A36203E00734F8B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -228,7 +228,7 @@
 		E44C18571A36203E00734F8B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E44C18561A36203E00734F8B /* WebBLE.app */,
+				E44C18561A36203E00734F8B /* RiversideScoreOffline.app */,
 				E44C186B1A36203E00734F8B /* WebBLETests.xctest */,
 			);
 			name = Products;
@@ -289,7 +289,7 @@
 			);
 			name = WebBLE;
 			productName = BasicBrowser;
-			productReference = E44C18561A36203E00734F8B /* WebBLE.app */;
+			productReference = E44C18561A36203E00734F8B /* RiversideScoreOffline.app */;
 			productType = "com.apple.product-type.application";
 		};
 		E44C186A1A36203E00734F8B /* WebBLETests */ = {
@@ -577,20 +577,23 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = M59JVX845Q;
 				ENABLE_TESTABILITY = YES;
 				INFOPLIST_FILE = BasicBrowser/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Riverside Score Offline";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.7.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.riversideinsights.offlineAdmin;
-				PRODUCT_NAME = WebBLE;
+				PRODUCT_NAME = RiversideScoreOffline;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -600,19 +603,22 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = M59JVX845Q;
 				INFOPLIST_FILE = BasicBrowser/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Riverside Score Offline";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.7.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.riversideinsights.offlineAdmin;
-				PRODUCT_NAME = WebBLE;
+				PRODUCT_NAME = RiversideScoreOffline;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

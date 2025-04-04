@@ -53,6 +53,7 @@ class WBWebView: WKWebView, WKNavigationDelegate {
         let webCfg = WKWebViewConfiguration()
         let userController = WKUserContentController()
         webCfg.userContentController = userController
+        webCfg.mediaTypesRequiringUserActionForPlayback = []
         webCfg.allowsInlineMediaPlayback = true
 
         // Set up the user agent name to include an app specific append rather

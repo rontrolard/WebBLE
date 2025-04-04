@@ -19,28 +19,42 @@
 import Foundation
 import CoreBluetooth
 import WebKit
+import Network
 
 protocol WBPicker {
     func showPicker()
     func updatePicker()
 }
 
-open class WBManager: NSObject, 
+private var studentGuid : CBUUID =  CBUUID(string: "cafebabe-57ee-7033-f00f-a11ca75ea723")
+private var service : CBUUID =   CBUUID(string: "cafebabe-57ee-7033-f00f-a11ca75ea722")
+
+
+class NetworkingHandler: NSObject, URLSessionDelegate {
+    func urlSession(_ session: URLSession, taskIsWaitingForConnectivity task: URLSessionTask) {
+        // Indicate network status, e.g., offline mode
+    }
+    
+    func urlSession(_ session: URLSession, task: URLSessionTask, willBeginDelayedRequest: URLRequest, completionHandler: (URLSession.DelayedRequestDisposition, URLRequest?) -> Void) {
+        // Indicate network status, e.g., back to online
+    }
+}
+
+open class WBManager: NSObject,
                         CBCentralManagerDelegate,
                         CBPeripheralManagerDelegate,
                         WKScriptMessageHandler,
                         WBPopUpPickerViewDelegate
 {
-    private var service : CBUUID = CBUUID(string: "cafebabe-57ee-7033-f00f-a11ca75ea722")
+    private var monitor = NWPathMonitor();
     private var requestCounter : Int = 0;
     private var lastData : String?;
     private var currentWebView: WKWebView?;
-    private var studentCharacteristic: CBMutableCharacteristic = CBMutableCharacteristic(type: CBUUID.init(),
-                                                                                         properties: [.notify, .write, .read ],
-                                                                                         value: nil, permissions: [.readable, .writeable]);
-    private var streamingCharacteristic: CBMutableCharacteristic = CBMutableCharacteristic(type: CBUUID.init(),
-                                                                                           properties: [.write, .read ],
-                                                                                           value: nil, permissions: [.readable, .writeable ]);
+    private var bleService : CBMutableService?;
+    private var studentCharacteristic: CBMutableCharacteristic = CBMutableCharacteristic(type: studentGuid,
+                                                                                         properties: [.notify, .read, .write ],
+                                                                                         value: nil, permissions: [.readable, .writeable ]);
+
     public func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
         switch peripheral.state {
             case .poweredOff:
@@ -71,7 +85,9 @@ open class WBManager: NSObject,
         let myService =  CBMutableService(type: service, primary: true)
         
         myService.characteristics = [studentCharacteristic]
+        self.bleService = myService;
         peripheralManager.add(myService)
+        
         peripheralManager.publishL2CAPChannel(withEncryption: true)
         startAdvertising()
         
@@ -95,7 +111,7 @@ open class WBManager: NSObject,
         /*let response = ("Message from \(UIDevice.current.name) \(UIDevice.current.systemName) - \(self.requestCounter) battery: \(UIDevice.current.batteryLevel)").data(using: .utf8);
         
         request.value = response;*/
-        peripheral.respond(to: request, withResult: .attributeNotFound)
+        //peripheral.respond(to: request, withResult: .attributeNotFound)
     }
     public func peripheralManager(_ peripheral: CBPeripheralManager,
                                central: CBCentral,
@@ -104,21 +120,27 @@ open class WBManager: NSObject,
     }
     public func peripheralManager(_ peripheral: CBPeripheralManager, didAdd service: CBService, error: (any Error)?) {
         print("Got Add request" + service.description);
+        if let webView = self.currentWebView {
+            webView.evaluateJavaScript("window.serverConnection.externalBluetoothConnected = false");
+        }
         //self.currentWebView.evaluateJavaScript("")
     }
     
     public func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveWrite requests: [CBATTRequest]) {
-        print("Got write request" + requests.description);
+        //print("Got write request" + requests.description);
         if let webView = self.currentWebView {
             webView.evaluateJavaScript("window.serverConnection.externalBluetoothConnected = true");
         }
+        var matchedRequest: CBATTRequest? = nil;
         for req in requests {
-            //if req.characteristic != _controlCharacteristic {
-            //    continue
-            //}
+            if(req.characteristic != studentCharacteristic) {
+                continue;
+            }
             guard let value = req.value else {
                 continue
             }
+            matchedRequest = req;
+            print(" Got good request")
             //assert(req.offset == 0 && value.count == 1)
             //ctrlCharacteristic.value = value
             let recievedData = String(data: value, encoding: .utf8)!
@@ -126,7 +148,7 @@ open class WBManager: NSObject,
                 webView.evaluateJavaScript("window.serverConnection.dispatchMessage(JSON.parse('" + recievedData + "'))")
                 //webView.evaluateJavaScript("alert('" + realData + "')");
             }
-            print(recievedData);
+            print("received data: " + recievedData);
             /*let array = value.withUnsafeBytes {
                 $0.load(as: UInt8.self)
                 //[UInt8](UnsafeBufferPointer(start: $0, count: value.count))
@@ -143,7 +165,12 @@ open class WBManager: NSObject,
             */
             //_delegate.sending(byte != 0)
         }
-        peripheral.respond(to: requests[0], withResult: .success)
+        if let match = matchedRequest {
+            peripheral.respond(to: match, withResult: .success)
+        }
+        else {
+            peripheral.respond(to: requests[0], withResult: .writeNotPermitted)
+        }
     }
     
     public func peripheralManagerDidStartAdvertising(_ peripheral: CBPeripheralManager, error: (any Error)?) {
@@ -213,6 +240,7 @@ open class WBManager: NSObject,
         super.init()
         self.centralManager.delegate = self
         self.peripheralManager.delegate = self
+        monitor.start(queue: .global());
     }
     // MARK: - Public API
     public func selectDeviceAt(_ index: Int) {
@@ -349,7 +377,12 @@ open class WBManager: NSObject,
                 //webView.evaluateJavaScript("window.serverConnection.dispatchMessage(JSON.parse(`\(transaction.messageData)`))");
                 let currentData = "\(transaction.jsonData)";
                 let sval = currentData.data(using: .utf8);
-                studentCharacteristic.value = sval;
+                if let goodData = sval {
+                    
+                    self.peripheralManager.updateValue(goodData, for: studentCharacteristic, onSubscribedCentrals: nil);
+                }
+                //readCharacteristic.value = sval;
+                //writeCharacteristic.value = sval;
                 
                 lastData = currentData;
                 print(currentData);

@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>WebBLE</string>
+	<string>RiversideScoreOffline</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -35,10 +35,37 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>https://192.168.88.29:8443</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
+			<key>https://clinical-wjv-qa.rsiapps.com</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
+			<key>https://riversidescore.com</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
 	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>WebBLE implements the web bluetooth APIs, and therefore needs bluetooth peripheral access</string>
+	<string>Riverside Offline testing uses bluetooth to communicate with the examiner browser, bluetooth is requiered for offline use</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>Bluetooth peripheral access is required to allow webpages to use the Web Bluetooth APIs</string>
+	<string>Bluetooth peripheral access is required to allow offline testing to access the examiner</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Allow webpages to use your camera</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
@@ -49,6 +76,8 @@
 	<array>
 		<string>bluetooth-central</string>
 		<string>bluetooth-peripheral</string>
+		<string>audio</string>
+		<string>fetch</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
