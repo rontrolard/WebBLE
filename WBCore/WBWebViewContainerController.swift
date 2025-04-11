@@ -56,7 +56,7 @@ class WBWebViewContainerController: UIViewController, WKNavigationDelegate, WKUI
     // MARK: - View Event handling
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.webView.isInspectable = true
         self.webView.addNavigationDelegate(self)
         self.webView.uiDelegate = self
         

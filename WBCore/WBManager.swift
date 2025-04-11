@@ -99,7 +99,7 @@ open class WBManager: NSObject,
     public func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveRead request: CBATTRequest) {
         print("Got read request " + request.description);
         if let webView = self.currentWebView {
-            webView.evaluateJavaScript("window.serverConnection.externalBluetoothConnected = true");
+            webView.evaluateJavaScript("window.bluetoothEnabled = true; window.serverConnection.externalBluetoothConnected = true;");
         }
         requestCounter+=1;
         if let lastString = lastData {
@@ -121,7 +121,8 @@ open class WBManager: NSObject,
     public func peripheralManager(_ peripheral: CBPeripheralManager, didAdd service: CBService, error: (any Error)?) {
         print("Got Add request" + service.description);
         if let webView = self.currentWebView {
-            webView.evaluateJavaScript("window.serverConnection.externalBluetoothConnected = false");
+            webView.evaluateJavaScript("window.bluetoothEnabled = false; window.serverConnection.externalBluetoothConnected = false;");
+
         }
         //self.currentWebView.evaluateJavaScript("")
     }
@@ -129,7 +130,8 @@ open class WBManager: NSObject,
     public func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveWrite requests: [CBATTRequest]) {
         //print("Got write request" + requests.description);
         if let webView = self.currentWebView {
-            webView.evaluateJavaScript("window.serverConnection.externalBluetoothConnected = true");
+            webView.evaluateJavaScript("window.bluetoothEnabled = true; window.serverConnection.externalBluetoothConnected = true;");
+
         }
         var matchedRequest: CBATTRequest? = nil;
         for req in requests {
@@ -311,7 +313,8 @@ open class WBManager: NSObject,
                 return
         }
         if let webView = self.currentWebView {
-            webView.evaluateJavaScript("window.serverConnection.externalBluetoothConnected = false");
+            webView.evaluateJavaScript("window.bluetoothEnabled = false; window.serverConnection.externalBluetoothConnected = false;");
+
         }
 
         device.didDisconnect(error: error)
