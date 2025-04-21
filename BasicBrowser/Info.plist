@@ -53,6 +53,13 @@
 				<key>NSIncludesSubdomains</key>
 				<true/>
 			</dict>
+			<key>https://marvin.digitalconcrete.net</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
 			<key>https://riversidescore.com</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
@@ -99,6 +106,13 @@
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>WKAppBoundDomains</key>
+	<array>
+		<string>marvin.digitalconcrete.net</string>
+		<string>clinical-wjv-qa.rsiapps.com</string>
+		<string>riversidescore.com</string>
+		<string>www.riversidescore.com</string>
 	</array>
 </dict>
 </plist>

@@ -55,6 +55,7 @@ class WBWebView: WKWebView, WKNavigationDelegate {
         webCfg.userContentController = userController
         webCfg.mediaTypesRequiringUserActionForPlayback = []
         webCfg.allowsInlineMediaPlayback = true
+        webCfg.limitsNavigationsToAppBoundDomains = true
 
         // Set up the user agent name to include an app specific append rather
         // than just the default WKWebView build number
@@ -81,6 +82,7 @@ class WBWebView: WKWebView, WKNavigationDelegate {
             frame: CGRect(),
             configuration: webCfg
         )
+        self.configuration.limitsNavigationsToAppBoundDomains = true
         self.navigationDelegate = self
 
         // TODO: this probably should be more controllable.
@@ -88,14 +90,14 @@ class WBWebView: WKWebView, WKNavigationDelegate {
         // it seems a bit arbitrary when this happens otherwise.
         // This from http://stackoverflow.com/a/34376943/5920499
         
-         let websiteDataTypes = NSSet(array: [WKWebsiteDataTypeMemoryCache]) as! Set<String>
+        /* let websiteDataTypes = NSSet(array: [WKWebsiteDataTypeMemoryCache]) as! Set<String>
         let ds = WKWebsiteDataStore.default();
         
         ds.removeData(
             ofTypes: websiteDataTypes,
             modifiedSince: NSDate(timeIntervalSince1970: 0) as Date,
             completionHandler:{})
-        
+        */
         // Load js
         for jsfilename in [
             "stringview",

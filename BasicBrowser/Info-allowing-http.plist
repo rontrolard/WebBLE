@@ -2,6 +2,13 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>WKAppBoundDomains</key>
+	<array>
+		<string>marvin.digitalconcrete.net</string>
+		<string>clinical-wjv-qa.rsiapps.com</string>
+		<string>riversidescore.com</string>
+		<string>www.riversidescore.com</string>
+	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>

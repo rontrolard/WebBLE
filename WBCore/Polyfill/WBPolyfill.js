@@ -300,10 +300,11 @@
   // MARK: - Patches
   // Patch window.open so it doesn't attempt to open in a separate window or tab ever.
   function open(location) {
-    window.location = location;
+    console.log("Attempt to open " + location);
+    //window.location = location;
   }
   window.open = open;
+  window.isExamineeApp = true;
   navigator.bluetooth.examineeReadMessage();
-  native.sendMessage("Test");
   nslog('WBPolyfill complete');
 }());

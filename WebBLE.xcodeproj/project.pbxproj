@@ -124,6 +124,7 @@
 		E44C186B1A36203E00734F8B /* WebBLETests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WebBLETests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E44C18701A36203E00734F8B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E44C18711A36203E00734F8B /* BleBrowserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BleBrowserTests.swift; sourceTree = "<group>"; };
+		E611E69A2DB6B4CF00A0CEFC /* WebBLE.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WebBLE.entitlements; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -237,6 +238,7 @@
 		E44C18581A36203E00734F8B /* WebBLE */ = {
 			isa = PBXGroup;
 			children = (
+				E611E69A2DB6B4CF00A0CEFC /* WebBLE.entitlements */,
 				5A10929D2168D5F4002CC973 /* Bookmarks */,
 				5A5D621521EBA83D00E417DC /* NavigationViewController.swift */,
 				E44C185B1A36203E00734F8B /* AppDelegate.swift */,
@@ -577,6 +579,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = WebBLE.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -603,6 +606,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = WebBLE.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
