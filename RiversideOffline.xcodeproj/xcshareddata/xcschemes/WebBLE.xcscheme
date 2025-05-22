@@ -17,8 +17,8 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E44C18551A36203E00734F8B"
                BuildableName = "RiversideScoreOffline.app"
-               BlueprintName = "WebBLE"
-               ReferencedContainer = "container:WebBLE.xcodeproj">
+               BlueprintName = "RiversideOffline"
+               ReferencedContainer = "container:RiversideOffline.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -35,9 +35,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E44C186A1A36203E00734F8B"
-               BuildableName = "WebBLETests.xctest"
-               BlueprintName = "WebBLETests"
-               ReferencedContainer = "container:WebBLE.xcodeproj">
+               BuildableName = "RiversideOfflineTests.xctest"
+               BlueprintName = "RiversideOfflineTests"
+               ReferencedContainer = "container:RiversideOffline.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -58,8 +58,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E44C18551A36203E00734F8B"
             BuildableName = "RiversideScoreOffline.app"
-            BlueprintName = "WebBLE"
-            ReferencedContainer = "container:WebBLE.xcodeproj">
+            BlueprintName = "RiversideOffline"
+            ReferencedContainer = "container:RiversideOffline.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -75,8 +75,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E44C18551A36203E00734F8B"
             BuildableName = "RiversideScoreOffline.app"
-            BlueprintName = "WebBLE"
-            ReferencedContainer = "container:WebBLE.xcodeproj">
+            BlueprintName = "RiversideOffline"
+            ReferencedContainer = "container:RiversideOffline.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

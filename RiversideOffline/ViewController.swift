@@ -200,6 +200,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         //let lastLocation: String = "https://192.168.88.218:8443/examineeOffline";
         let lastLocation: String = "https://marvin.digitalconcrete.net/examinee";
         self.loadLocation(lastLocation)
+
         
         // Maybe re-open console
         if ud.bool(forKey: prefKeys.consoleOpen.rawValue) {
@@ -215,6 +216,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         if self.shouldShowBars {
             self.showBars()
         }
+
     }
     override func viewWillDisappear(_ animated: Bool) {
         let nc = self.navigationController as! NavigationViewController
