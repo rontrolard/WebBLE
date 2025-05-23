@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="bXw-Ly-snu">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="bXw-Ly-snu">
     <device id="ipad10_9rounded" orientation="portrait" layout="fullscreen" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -12,13 +12,13 @@
         <!--Navigation View Controller-->
         <scene sceneID="lV6-vP-8ff">
             <objects>
-                <navigationController toolbarHidden="NO" hidesBarsOnSwipe="YES" id="bXw-Ly-snu" customClass="NavigationViewController" customModule="WebBLE" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController toolbarHidden="NO" hidesBarsOnSwipe="YES" id="bXw-Ly-snu" customClass="NavigationViewController" customModule="RiversideScoreOffline" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="izC-eW-IMa">
                         <rect key="frame" x="0.0" y="24" width="820" height="50"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="UlI-6c-o9z">
-                        <rect key="frame" x="0.0" y="1110" width="820" height="50"/>
+                        <rect key="frame" x="0.0" y="1085" width="820" height="50"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </toolbar>
                     <connections>
@@ -32,12 +32,12 @@
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="WebBLE" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="RiversideScoreOffline" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="820" height="1180"/>
                         <subviews>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="I1P-4j-XZZ">
-                                <rect key="frame" x="0.0" y="74" width="820" height="1036"/>
+                                <rect key="frame" x="0.0" y="74" width="820" height="1006"/>
                                 <constraints>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="ew5-31-Qcw"/>
                                 </constraints>
@@ -46,14 +46,14 @@
                                 </connections>
                             </containerView>
                             <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Tick@480.png" translatesAutoresizingMaskIntoConstraints="NO" id="6wE-az-iDp">
-                                <rect key="frame" x="288" y="472" width="240" height="240"/>
+                                <rect key="frame" x="288" y="457" width="240" height="240"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="240" id="em1-ft-ljS"/>
                                     <constraint firstAttribute="height" constant="240" id="qSE-Sl-Qc3"/>
                                 </constraints>
                             </imageView>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NgV-mf-Lto">
-                                <rect key="frame" x="0.0" y="1070" width="820" height="110"/>
+                                <rect key="frame" x="0.0" y="1040" width="820" height="140"/>
                                 <gestureRecognizers/>
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="QVE-VE-sVj" appends="YES" id="J2j-S7-lR0"/>
@@ -114,7 +114,7 @@
                     </toolbarItems>
                     <navigationItem key="navigationItem" id="5bm-lP-CUV">
                         <nil key="title"/>
-                        <textField key="titleView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" verticalCompressionResistancePriority="1000" preservesSuperviewLayoutMargins="YES" contentHorizontalAlignment="fill" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" clearButtonMode="whileEditing" id="O1l-7F-uXL" customClass="URLTextField" customModule="WebBLE" customModuleProvider="target">
+                        <textField key="titleView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" verticalCompressionResistancePriority="1000" preservesSuperviewLayoutMargins="YES" contentHorizontalAlignment="fill" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" clearButtonMode="whileEditing" id="O1l-7F-uXL" customClass="URLTextField" customModule="RiversideScoreOffline" customModuleProvider="target">
                             <rect key="frame" x="239" y="8" width="343" height="34"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" systemColor="groupTableViewBackgroundColor"/>
@@ -134,7 +134,7 @@
                         <outlet property="refreshButton" destination="LXB-CH-4RT" id="350-AZ-rBZ"/>
                         <outlet property="showConsoleButton" destination="uNi-2X-YpW" id="CTt-pC-CFQ"/>
                         <outlet property="tick" destination="6wE-az-iDp" id="aNh-gM-jXz"/>
-                        <segue destination="key-17-bOS" kind="custom" identifier="ShowConsoleSegueID" customClass="ShowConsoleSegue" customModule="WebBLE" customModuleProvider="target" id="Cnc-k6-Alb"/>
+                        <segue destination="key-17-bOS" kind="custom" identifier="ShowConsoleSegueID" customClass="ShowConsoleSegue" customModule="RiversideScoreOffline" customModuleProvider="target" id="Cnc-k6-Alb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -149,7 +149,7 @@
         <!--Bookmarks View Controller-->
         <scene sceneID="cuT-Se-jjO">
             <objects>
-                <tableViewController id="bL6-a5-4h5" customClass="BookmarksViewController" customModule="WebBLE" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="bL6-a5-4h5" customClass="BookmarksViewController" customModule="RiversideScoreOffline" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="gNH-ze-Sky">
                         <rect key="frame" x="0.0" y="0.0" width="820" height="1180"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

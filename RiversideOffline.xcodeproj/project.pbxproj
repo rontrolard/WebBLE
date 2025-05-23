@@ -589,7 +589,7 @@
 				INFOPLIST_FILE = RiversideOffline/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Riverside Score Offline";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -615,7 +615,7 @@
 				INFOPLIST_FILE = RiversideOffline/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Riverside Score Offline";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
