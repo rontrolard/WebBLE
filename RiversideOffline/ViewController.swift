@@ -200,7 +200,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         //let lastLocation: String = "https://192.168.88.218:8443/examineeOffline";
         let lastLocation: String = "https://marvin.digitalconcrete.net/examinee";
         self.loadLocation(lastLocation)
-
+        self.navigationController?.navigationBar.isHidden = true
         
         // Maybe re-open console
         if ud.bool(forKey: prefKeys.consoleOpen.rawValue) {
