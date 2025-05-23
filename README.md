@@ -1,4 +1,7 @@
-# WebBLE
+# Riverside Score Student Offline
+
+altered from the WebBLE safari wrapper
+
 
 Initial partial implementation of the [Web Bluetooth](https://webbluetoothcg.github.io/web-bluetooth/) 
 spec for iOS, originally forked from [Paul Thierault](https://github.com/pauljt)'s [original implementation](https://github.com/pauljt/BleBrowser).
