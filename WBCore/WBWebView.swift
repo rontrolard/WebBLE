@@ -90,7 +90,7 @@ class WBWebView: WKWebView, WKNavigationDelegate {
         // it seems a bit arbitrary when this happens otherwise.
         // This from http://stackoverflow.com/a/34376943/5920499
         
-        /* let websiteDataTypes = NSSet(array: [WKWebsiteDataTypeMemoryCache]) as! Set<String>
+        /*let websiteDataTypes = NSSet(array: [WKWebsiteDataTypeMemoryCache]) as! Set<String>
         let ds = WKWebsiteDataStore.default();
         
         ds.removeData(

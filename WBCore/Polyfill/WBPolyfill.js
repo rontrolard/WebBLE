@@ -305,6 +305,7 @@
   }
   window.open = open;
   window.isExamineeApp = true;
+  window.bluetoothEnabled = true;
   navigator.bluetooth.examineeReadMessage();
   nslog('WBPolyfill complete');
 }());
