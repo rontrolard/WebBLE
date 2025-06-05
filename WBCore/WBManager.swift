@@ -121,7 +121,7 @@ open class WBManager: NSObject,
     public func peripheralManager(_ peripheral: CBPeripheralManager, didAdd service: CBService, error: (any Error)?) {
         print("Got Add request" + service.description);
         if let webView = self.currentWebView {
-            webView.evaluateJavaScript("window.bluetoothEnabled = false; window.serverConnection.externalBluetoothConnected = false;");
+            webView.evaluateJavaScript("window.serverConnection.externalBluetoothConnected = false;");
 
         }
         //self.currentWebView.evaluateJavaScript("")
@@ -150,7 +150,7 @@ open class WBManager: NSObject,
                 webView.evaluateJavaScript("window.serverConnection.dispatchMessage(JSON.parse('" + recievedData + "'))")
                 //webView.evaluateJavaScript("alert('" + realData + "')");
             }
-            print("received data: " + recievedData);
+            print("received data: [[" + recievedData + "]]");
             /*let array = value.withUnsafeBytes {
                 $0.load(as: UInt8.self)
                 //[UInt8](UnsafeBufferPointer(start: $0, count: value.count))
@@ -313,7 +313,7 @@ open class WBManager: NSObject,
                 return
         }
         if let webView = self.currentWebView {
-            webView.evaluateJavaScript("window.bluetoothEnabled = false; window.serverConnection.externalBluetoothConnected = false;");
+            webView.evaluateJavaScript("window.serverConnection.externalBluetoothConnected = false;");
 
         }
 
