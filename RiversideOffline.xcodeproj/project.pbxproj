@@ -87,7 +87,7 @@
 		5A7579EE21579E0E003F0CEA /* ConsoleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsoleView.swift; sourceTree = "<group>"; };
 		5A85B9F41E2946DE00E0B718 /* BookmarksViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarksViewController.swift; sourceTree = "<group>"; };
 		5A85B9F61E294B2900E0B718 /* WBBookmark.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBBookmark.swift; sourceTree = "<group>"; };
-		5A85B9F81E29582400E0B718 /* Defaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Defaults.plist; path = /Users/trolardr/Documents/WebBLE/RiversideOffline/Defaults.plist; sourceTree = "<absolute>"; };
+		5A85B9F81E29582400E0B718 /* Defaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Defaults.plist; path = RiversideOffline/Defaults.plist; sourceTree = SOURCE_ROOT; };
 		5A8FD3FB233966050032DCE7 /* Console.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Console.storyboard; sourceTree = "<group>"; };
 		5A8FD3FD233973710032DCE7 /* WBCore.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = WBCore.storyboard; sourceTree = "<group>"; };
 		5A8FD3FF23397ED80032DCE7 /* WBWebViewContainerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WBWebViewContainerController.swift; sourceTree = "<group>"; };
