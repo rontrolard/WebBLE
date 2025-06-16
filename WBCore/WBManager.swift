@@ -145,6 +145,12 @@ open class WBManager: NSObject,
             print(" Got good request")
             //assert(req.offset == 0 && value.count == 1)
             //ctrlCharacteristic.value = value
+            /*do {
+                let compressedData = try (value as NSData).compressed(using: .zlib)
+                // use your compressed data
+            } catch {
+                print("Error cannot decompress message");
+            }*/
             let recievedData = String(data: value, encoding: .utf8)!
             if let webView = self.currentWebView {
                 webView.evaluateJavaScript("window.serverConnection.dispatchMessage(JSON.parse('" + recievedData + "'))")
