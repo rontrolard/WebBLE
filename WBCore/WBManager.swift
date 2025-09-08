@@ -20,6 +20,7 @@ import Foundation
 import CoreBluetooth
 import WebKit
 import Network
+import Gzip
 
 protocol WBPicker {
     func showPicker()
@@ -145,7 +146,17 @@ open class WBManager: NSObject,
             print(" Got good request")
             //assert(req.offset == 0 && value.count == 1)
             //ctrlCharacteristic.value = value
-            let recievedData = String(data: value, encoding: .utf8)!
+            /*do {
+                let compressedData = try (value as NSData).compressed(using: .zlib)
+                // use your compressed data
+            } catch {
+                print("Error cannot decompress message");
+            }*/
+            var decompressedData: Data = value;
+            if(value.isGzipped) {
+                decompressedData = try! value.gunzipped();
+            }
+            let recievedData = String(data: decompressedData, encoding: .utf8)!
             if let webView = self.currentWebView {
                 webView.evaluateJavaScript("window.serverConnection.dispatchMessage(JSON.parse('" + recievedData + "'))")
                 //webView.evaluateJavaScript("alert('" + realData + "')");
