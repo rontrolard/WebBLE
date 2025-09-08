@@ -20,6 +20,7 @@ import Foundation
 import CoreBluetooth
 import WebKit
 import Network
+import Gzip
 
 protocol WBPicker {
     func showPicker()
@@ -151,7 +152,11 @@ open class WBManager: NSObject,
             } catch {
                 print("Error cannot decompress message");
             }*/
-            let recievedData = String(data: value, encoding: .utf8)!
+            var decompressedData: Data = value;
+            if(value.isGzipped) {
+                decompressedData = try! value.gunzipped();
+            }
+            let recievedData = String(data: decompressedData, encoding: .utf8)!
             if let webView = self.currentWebView {
                 webView.evaluateJavaScript("window.serverConnection.dispatchMessage(JSON.parse('" + recievedData + "'))")
                 //webView.evaluateJavaScript("alert('" + realData + "')");

@@ -55,6 +55,7 @@
 		E44C18631A36203E00734F8B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E44C18621A36203E00734F8B /* Images.xcassets */; };
 		E44C18661A36203E00734F8B /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = E44C18641A36203E00734F8B /* LaunchScreen.xib */; };
 		E44C18721A36203E00734F8B /* BleBrowserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44C18711A36203E00734F8B /* BleBrowserTests.swift */; };
+		E4A898512E0B1FA200D3317F /* Gzip in Frameworks */ = {isa = PBXBuildFile; productRef = E4A898502E0B1FA200D3317F /* Gzip */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -132,6 +133,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E4A898512E0B1FA200D3317F /* Gzip in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -343,6 +345,9 @@
 				Base,
 			);
 			mainGroup = E44C184D1A36203E00734F8B;
+			packageReferences = (
+				E4A8984F2E0B1FA200D3317F /* XCRemoteSwiftPackageReference "GzipSwift" */,
+			);
 			productRefGroup = E44C18571A36203E00734F8B /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -692,6 +697,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E4A8984F2E0B1FA200D3317F /* XCRemoteSwiftPackageReference "GzipSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/1024jp/GzipSwift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.1.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E4A898502E0B1FA200D3317F /* Gzip */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E4A8984F2E0B1FA200D3317F /* XCRemoteSwiftPackageReference "GzipSwift" */;
+			productName = Gzip;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = E44C184E1A36203E00734F8B /* Project object */;
 }
