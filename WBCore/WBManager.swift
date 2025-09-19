@@ -389,12 +389,14 @@ open class WBManager: NSObject,
             if let webView = transaction.webView {
                 self.currentWebView = webView;
                 //webView.evaluateJavaScript("window.serverConnection.dispatchMessage(JSON.parse(`\(transaction.messageData)`))");
+                let compressedData: Data = try! transaction.jsonData.data(using: .utf8)!.gzipped()
+                self.peripheralManager.updateValue(compressedData, for: studentCharacteristic, onSubscribedCentrals: nil);
                 let currentData = "\(transaction.jsonData)";
+                /*
                 let sval = currentData.data(using: .utf8);
                 if let goodData = sval {
-                    
                     self.peripheralManager.updateValue(goodData, for: studentCharacteristic, onSubscribedCentrals: nil);
-                }
+                } */
                 //readCharacteristic.value = sval;
                 //writeCharacteristic.value = sval;
                 
