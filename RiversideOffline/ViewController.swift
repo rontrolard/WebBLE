@@ -235,7 +235,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         }
         loadURL(url)
     }
-
     func loadURL(_ url: URL) {
         guard self.isViewLoaded else {
             self.initialURL = url
@@ -243,6 +242,9 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         }
         self.setLocationText(url.absoluteString)
         self.webView.load(URLRequest(url: url))
+    }
+    func abortIfNeeded() {
+        self.webView.evaluateJavaScript("window.abortCallback?.()");
     }
     func setLocationText(_ text: String) {
         self.locationTextField.text = text
