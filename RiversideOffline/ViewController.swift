@@ -196,9 +196,10 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
 
         // Load last location
         //let lastLocation: String = "https://192.168.88.29:8443/examineeOffline"; //"https://192.168.88.29:8443/examinee"
-        let lastLocation: String = "https://stage.riversidescore.com/examinee"
+        // let lastLocation: String = "https://stage.riversidescore.com/examinee"
         //let lastLocation: String = "https://192.168.88.218:8443/examineeOffline";
         // let lastLocation: String = "https://marvin.digitalconcrete.net/examinee";
+        let lastLocation: String = "https://clinical-uat.rsiapps.com/examinee"
         self.loadLocation(lastLocation)
         self.navigationController?.navigationBar.isHidden = true
         

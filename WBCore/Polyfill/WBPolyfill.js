@@ -156,7 +156,7 @@
     },
     sendMessage: function (type, sendMessageParms) {
       let message;
-      console.log(sendMessageParms);
+      // console.log(sendMessageParms);
       if (type === undefined) {
         throw new Error('CallRemote should never be called without a type!');
       }
