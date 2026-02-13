@@ -84,10 +84,11 @@ open class WBManager: NSObject,
         print(peripheral.state);
                 
         let myService =  CBMutableService(type: service, primary: true)
-        
+    
         myService.characteristics = [studentCharacteristic]
         self.bleService = myService;
-        peripheralManager.add(myService)
+        
+        peripheralManager.add(myService);
         
         peripheralManager.publishL2CAPChannel(withEncryption: true)
         startAdvertising()

@@ -601,7 +601,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.7.4;
+				MARKETING_VERSION = 1.7.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.riversideinsights.RiversideOffline;
 				PRODUCT_NAME = RiversideScoreOffline;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -627,7 +627,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.7.4;
+				MARKETING_VERSION = 1.7.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.riversideinsights.RiversideOffline;
 				PRODUCT_NAME = RiversideScoreOffline;
 				PROVISIONING_PROFILE_SPECIFIER = "";
