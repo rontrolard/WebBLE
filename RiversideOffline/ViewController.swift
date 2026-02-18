@@ -15,7 +15,14 @@
 
 import UIKit
 import WebKit
-
+import Foundation
+var isTestFlight: Bool {
+   #if DEBUG
+   return false // Debug builds are not TestFlight
+   #else
+   return Bundle.main.appStoreReceiptURL?.lastPathComponent == "sandboxReceipt"
+   #endif
+}
 class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegate, WKUIDelegate, UIScrollViewDelegate, ConsoleToggler {
 
     enum prefKeys: String {
@@ -199,7 +206,15 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         // let lastLocation: String = "https://stage.riversidescore.com/examinee"
         //let lastLocation: String = "https://192.168.88.218:8443/examineeOffline";
         // let lastLocation: String = "https://marvin.digitalconcrete.net/examinee";
-        let lastLocation: String = "https://riversidescore.com/examinee"
+        var lastLocation: String = "https://riversidescore.com/examinee"
+        
+        if isTestFlight {
+            lastLocation = "https://stage.riversidescore.com/examinee"
+        } else {
+           print("Running from App Store")
+        }
+
+
         self.loadLocation(lastLocation)
         self.navigationController?.navigationBar.isHidden = true
         
