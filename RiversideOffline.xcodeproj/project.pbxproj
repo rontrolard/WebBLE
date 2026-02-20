@@ -55,6 +55,7 @@
 		E44C18661A36203E00734F8B /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = E44C18641A36203E00734F8B /* LaunchScreen.xib */; };
 		E44C18721A36203E00734F8B /* BleBrowserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44C18711A36203E00734F8B /* BleBrowserTests.swift */; };
 		E4A898512E0B1FA200D3317F /* Gzip in Frameworks */ = {isa = PBXBuildFile; productRef = E4A898502E0B1FA200D3317F /* Gzip */; };
+		E6146ADE2F48FC43008F27D2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6146ADD2F48FC43008F27D2 /* SceneDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -124,6 +125,7 @@
 		E44C18701A36203E00734F8B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E44C18711A36203E00734F8B /* BleBrowserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BleBrowserTests.swift; sourceTree = "<group>"; };
 		E611E69A2DB6B4CF00A0CEFC /* WebBLE.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = WebBLE.entitlements; path = ../WebBLE.entitlements; sourceTree = "<group>"; };
+		E6146ADD2F48FC43008F27D2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -237,6 +239,7 @@
 		E44C18581A36203E00734F8B /* RiversideOffline */ = {
 			isa = PBXGroup;
 			children = (
+				E6146ADD2F48FC43008F27D2 /* SceneDelegate.swift */,
 				E611E69A2DB6B4CF00A0CEFC /* WebBLE.entitlements */,
 				5A10929D2168D5F4002CC973 /* Bookmarks */,
 				5A5D621521EBA83D00E417DC /* NavigationViewController.swift */,
@@ -411,6 +414,7 @@
 				5A5D621621EBA83D00E417DC /* NavigationViewController.swift in Sources */,
 				5A10929B2168D599002CC973 /* ConsoleViewContainerController.swift in Sources */,
 				5A95DDF81E0C080C00DFE26B /* WBWebView.swift in Sources */,
+				E6146ADE2F48FC43008F27D2 /* SceneDelegate.swift in Sources */,
 				5A7579EF21579E0E003F0CEA /* ConsoleView.swift in Sources */,
 				5A1A8E1628009CD200271575 /* URLTextField.swift in Sources */,
 				5AC676FC221CA557007B1562 /* ErrorViewController.swift in Sources */,
