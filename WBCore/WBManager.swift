@@ -125,7 +125,9 @@ open class WBManager: NSObject,
     }
     
     public func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveRead request: CBATTRequest) {
+    #if DEBUG
         print("Got read request " + request.description);
+    #endif
         if let webView = self.currentWebView {
             webView.evaluateJavaScript("window.bluetoothEnabled = true; window.serverConnection.externalBluetoothConnected = true;");
         }
@@ -156,7 +158,9 @@ open class WBManager: NSObject,
     }
     
     public func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveWrite requests: [CBATTRequest]) {
+#if DEBUG
         print("Got write request" + requests.description);
+#endif
         if let webView = self.currentWebView {
             webView.evaluateJavaScript("window.bluetoothEnabled = true; window.serverConnection.externalBluetoothConnected = true;");
             
@@ -170,7 +174,9 @@ open class WBManager: NSObject,
                 continue
             }
             matchedRequest = req;
+#if DEBUG
             print(" Got good request")
+#endif
             //assert(req.offset == 0 && value.count == 1)
             //ctrlCharacteristic.value = value
             /*do {
@@ -188,7 +194,9 @@ open class WBManager: NSObject,
                 webView.evaluateJavaScript("window.serverConnection.dispatchMessage(JSON.parse('" + recievedData + "'))")
                 //webView.evaluateJavaScript("alert('" + realData + "')");
             }
+#if DEBUG
             print("received data: [[" + recievedData + "]]");
+#endif
             /*let array = value.withUnsafeBytes {
              $0.load(as: UInt8.self)
              //[UInt8](UnsafeBufferPointer(start: $0, count: value.count))
@@ -423,7 +431,7 @@ open class WBManager: NSObject,
                 let characteristic = studentCharacteristic;
                 let compressedData: Data = try! transaction.jsonData.data(using: .utf8)!.gzipped();
                 self.peripheralManager.updateValue(compressedData, for: characteristic, onSubscribedCentrals: nil);
-                let currentData = "\(transaction.jsonData)";
+                // let currentData = "\(transaction.jsonData)";
                 /*
                 let sval = currentData.data(using: .utf8);
                 if let goodData = sval {
@@ -432,8 +440,8 @@ open class WBManager: NSObject,
                 //readCharacteristic.value = sval;
                 //writeCharacteristic.value = sval;
                 
-                lastData = currentData;
-                print(currentData);
+                // lastData = currentData;
+                // print(currentData);
             }
 
         case .examineeReadMessage:
