@@ -24,7 +24,7 @@ class ConsoleViewController: UIViewController {
             return self.view as! ConsoleView
         }
     }
-
+    @MainActor
     deinit {
         self._unobserveLM()
         self._unobserveAllLogs()
@@ -42,28 +42,6 @@ class ConsoleViewController: UIViewController {
         self.consoleView.insertLogView(clv, at: index)
     }
 
-    // MARK: - KVO
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        let changeKind = NSKeyValueChange(rawValue: change![.kindKey] as! UInt)!
-
-        if object as? WBLogManager === self.logManager {
-            switch changeKind {
-            case .setting:
-                let logs = change![.newKey] as! [WBLog]
-                self.consoleView.removeAllLogViews()
-                for (index, log) in logs.enumerated() {
-                    self.insertLog(log: log, at: index)
-                }
-            case .insertion:
-                let insertIndexes = change![.indexesKey] as! NSIndexSet
-                for index in insertIndexes {
-                    self.insertLog(log: self.logManager.logs[index], at: index)
-                }
-            default:
-                NSLog("Unexpected change type \(changeKind)")
-            }
-        }
-    }
 
     // MARK: - UIViewController overrides
     override func viewDidLoad() {

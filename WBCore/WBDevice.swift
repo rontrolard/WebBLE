@@ -23,7 +23,7 @@ import CoreBluetooth
 import WebKit
 
 
-open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
+open class WBDevice: NSObject, Jsonifiable, @MainActor CBPeripheralDelegate {
     // MARK: - Embedded types
     enum DeviceRequests: String {
         case connectGATT, disconnectGATT, getPrimaryServices,
@@ -61,7 +61,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
             }
             super.init(transaction: transaction)
         }
-        func resolveFromServices(_ services: [CBService]) {
+        @MainActor func resolveFromServices(_ services: [CBService]) {
             let uuids = services.map{$0.uuid}.filter{
                 self.serviceUUID == nil || self.serviceUUID == $0
             }
@@ -87,7 +87,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
             super.init(transaction: transaction)
         }
 
-        func resolveUnknownService() {
+        @MainActor func resolveUnknownService() {
             self.transaction.resolveAsFailure(withMessage: "Service \(self.serviceUUID.uuidString) not known on device")
         }
     }
@@ -115,7 +115,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
                 && self.characteristicUUID == characteristic.uuid
             )
         }
-        func resolveUnknownCharacteristic() {
+        @MainActor func resolveUnknownCharacteristic() {
             self.transaction.resolveAsFailure(withMessage: "Characteristic \(self.characteristicUUID.uuidString) not known for service \(self.serviceUUID.uuidString) on device")
         }
     }
@@ -207,7 +207,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
     var writeCharacteristicTM = WBTransactionManager<CharacteristicTransactionKey>()
 
     // MARK: - Constructor and equality
-    init(peripheral: CBPeripheral, advertisementData: [String: Any] = [:], RSSI: NSNumber = 0, manager: WBManager) {
+    @MainActor init(peripheral: CBPeripheral, advertisementData: [String: Any] = [:], RSSI: NSNumber = 0, manager: WBManager) {
         self.peripheral = peripheral
         self.adData = BluetoothAdvertisingData(advertisementData:advertisementData,RSSI: RSSI)
         self.manager = manager
@@ -218,7 +218,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
         return left.peripheral == right.peripheral
     }
 
-    // MARK: - API
+    @MainActor
     func clearState() {
         self.manager?.centralManager.cancelPeripheralConnection(self.peripheral)
         for var ta in [self.connectTransactions] {
@@ -234,15 +234,15 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
         self.getCharacteristicsTM.abandonAll()
         self.readCharacteristicTM.abandonAll()
     }
-    func didConnect() {
+    @MainActor func didConnect() {
         self.connectTransactions.forEach{$0.resolveAsSuccess()}
     }
-    func didFailToConnect() {
+    @MainActor func didFailToConnect() {
         self.connectTransactions.forEach{
             $0.resolveAsFailure(withMessage: "Unable to connect to device")
         }
     }
-    func didDisconnect(error: Error?) {
+    @MainActor func didDisconnect(error: Error?) {
         NSLog("\(self) did disconnect \(error?.localizedDescription ?? "<no error>")")
         defer {
             self.sendDisconnectEvent()
@@ -263,7 +263,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
         }
         self.disconnectTM.apply{$0.resolveAsSuccess()}
     }
-
+    @MainActor
     func triage(_ tview: DeviceTransactionView) {
         let transaction = tview.transaction
         let tc = transaction.key.typeComponents
@@ -461,7 +461,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
     }
 
     // MARK: - CBPeripheralDelegate
-    open func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+    @MainActor open func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         var resolve: (WBTransaction) -> Void
         if let err = error {
             resolve = {
@@ -479,7 +479,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
         }
     }
 
-    open func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+    @MainActor open func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
 
         if let error_ = error {
             // speculative avoid crash judging by potential bug
@@ -522,7 +522,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
         }
     }
 
-    open func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+    @MainActor open func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         if self.readCharacteristicTM.transactions.count > 0 {
             // We have read transactions outstanding, which means that this is a response after a read request, so complete those transactions.
             self.readCharacteristicTM.apply({
@@ -550,7 +550,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
         }
     }
 
-    open func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
+    @MainActor open func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
         self.writeCharacteristicTM.apply({
             if let err = error {
                 $0.resolveAsFailure(withMessage: "Error writing characteristic: \(err.localizedDescription)")
@@ -572,7 +572,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
     }
 
     // MARK: - Private
-    func handleDisconnect(_ tview: DeviceTransactionView) {
+    @MainActor func handleDisconnect(_ tview: DeviceTransactionView) {
         guard let man = self.manager else {
             tview.transaction.resolveAsFailure(withMessage: "Failed due to internal inconsistency likely related to a recent page navigation (device's manager was released)")
             return
@@ -618,7 +618,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
         return nil
     }
 
-    private func handleGetPrimaryServices(_ tview: ServicesTransactionView) {
+    @MainActor private func handleGetPrimaryServices(_ tview: ServicesTransactionView) {
         let transaction = tview.transaction
         
         // check peripherals.services first to see if we already discovered services
@@ -631,7 +631,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
         tview.resolveFromServices(services)
     }
 
-    private func evaluateJavaScript(_ script: String) {
+    @MainActor private func evaluateJavaScript(_ script: String) {
         guard let wv = self.view else {
             NSLog("Can't evaluate javascript as have no webview")
             return
@@ -647,14 +647,14 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
         )
     }
 
-    private func sendDisconnectEvent() {
+    @MainActor private func sendDisconnectEvent() {
         /* Don't lower case the deviceId string because we rely on the web page not to touch it. */
         let commandString = "window.receiveDeviceDisconnectEvent(\(self.deviceId.uuidString.jsonify()));\n"
         NSLog("Send disconnect event for \(self.deviceId.uuidString)")
         self.evaluateJavaScript(commandString)
     }
 
-    private func writeCharacteristicValue(_ char: CBCharacteristic, _ view: WriteCharacteristicView) {
+    @MainActor private func writeCharacteristicValue(_ char: CBCharacteristic, _ view: WriteCharacteristicView) {
 
         switch view.responseMode {
         case .required:

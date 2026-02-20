@@ -33,7 +33,6 @@
 		5A95DDF81E0C080C00DFE26B /* WBWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A95DDF71E0C080B00DFE26B /* WBWebView.swift */; };
 		5AA79DDD1FB3AA0C00A4FCB4 /* WBBluetoothUUID.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AA79DDC1FB3AA0C00A4FCB4 /* WBBluetoothUUID.js */; };
 		5AC47CA61E2BE57000BCAE82 /* Tick@480.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AC47CA51E2BE57000BCAE82 /* Tick@480.png */; };
-		5AC47CA81E2CCF2F00BCAE82 /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC47CA71E2CCF2F00BCAE82 /* Animations.swift */; };
 		5AC676FC221CA557007B1562 /* ErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC676FB221CA557007B1562 /* ErrorViewController.swift */; };
 		5AC7ECAB233D0F9700CE7A2A /* Segues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC7ECAA233D0F9700CE7A2A /* Segues.swift */; };
 		5AC7ECAD233D177700CE7A2A /* WBPopUpPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC7ECAC233D177700CE7A2A /* WBPopUpPickerView.swift */; };
@@ -97,7 +96,6 @@
 		5A9B90F81E1FBCFD00AEDC07 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		5AA79DDC1FB3AA0C00A4FCB4 /* WBBluetoothUUID.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = WBBluetoothUUID.js; sourceTree = "<group>"; };
 		5AC47CA51E2BE57000BCAE82 /* Tick@480.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Tick@480.png"; sourceTree = "<group>"; };
-		5AC47CA71E2CCF2F00BCAE82 /* Animations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Animations.swift; sourceTree = "<group>"; };
 		5AC676FB221CA557007B1562 /* ErrorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorViewController.swift; sourceTree = "<group>"; };
 		5AC7ECAA233D0F9700CE7A2A /* Segues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Segues.swift; sourceTree = "<group>"; };
 		5AC7ECAC233D177700CE7A2A /* WBPopUpPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WBPopUpPickerView.swift; sourceTree = "<group>"; };
@@ -179,7 +177,6 @@
 				5A10929C2168D5B6002CC973 /* Console */,
 				5AFC780322ECDD410071E792 /* Polyfill */,
 				5ADE336D23663353007E6AD7 /* Images.xcassets */,
-				5AC47CA71E2CCF2F00BCAE82 /* Animations.swift */,
 				5AC676FB221CA557007B1562 /* ErrorViewController.swift */,
 				5AC7ECAA233D0F9700CE7A2A /* Segues.swift */,
 				5AC7ECAC233D177700CE7A2A /* WBPopUpPickerView.swift */,
@@ -404,7 +401,6 @@
 				BB4DBE651C97F577000D2C35 /* WBTransaction.swift in Sources */,
 				5AC7ECAB233D0F9700CE7A2A /* Segues.swift in Sources */,
 				5AC7ECAD233D177700CE7A2A /* WBPopUpPickerView.swift in Sources */,
-				5AC47CA81E2CCF2F00BCAE82 /* Animations.swift in Sources */,
 				5AC8067D21655B5E00AA5176 /* DividerView.swift in Sources */,
 				5A7579EA2151588B003F0CEA /* ConsoleViewController.swift in Sources */,
 				5A5D6404216C9F9300BCD722 /* WBLog.swift in Sources */,
@@ -608,7 +604,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.riversideinsights.RiversideOffline;
 				PRODUCT_NAME = RiversideScoreOffline;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Debug;
@@ -634,7 +630,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.riversideinsights.RiversideOffline;
 				PRODUCT_NAME = RiversideScoreOffline;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Release;

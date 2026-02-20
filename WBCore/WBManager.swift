@@ -27,11 +27,10 @@ protocol WBPicker {
     func updatePicker()
 }
 
-private var studentGuid : CBUUID =  CBUUID(string: "cafebabe-57ee-7033-f00f-a11ca75ea723")
-private var service : CBUUID =   CBUUID(string: "cafebabe-57ee-7033-f00f-a11ca75ea722")
+private var studentGuid : CBUUID {  CBUUID(string: "cafebabe-57ee-7033-f00f-a11ca75ea723") }
+private var service : CBUUID { CBUUID(string: "cafebabe-57ee-7033-f00f-a11ca75ea722")}
 
-
-class NetworkingHandler: NSObject, URLSessionDelegate {
+class NetworkingHandler: NSObject, URLSessionDelegate, @unchecked Sendable {
     func urlSession(_ session: URLSession, taskIsWaitingForConnectivity task: URLSessionTask) {
         // Indicate network status, e.g., offline mode
     }
@@ -42,59 +41,86 @@ class NetworkingHandler: NSObject, URLSessionDelegate {
 }
 
 open class WBManager: NSObject,
-                        CBCentralManagerDelegate,
-                        CBPeripheralManagerDelegate,
+                      @preconcurrency CBCentralManagerDelegate,
+                        @MainActor CBPeripheralManagerDelegate,
                         WKScriptMessageHandler,
                         WBPopUpPickerViewDelegate
 {
+    private var studentCharacteristic: CBMutableCharacteristic = CBMutableCharacteristic(type: studentGuid,
+                                                                                         properties: [.notify, .read, .write ],
+                                                                                         value: nil, permissions: [.readable, .writeable ]);
+
+    public func centralManagerDidUpdateState(_ central: CBCentralManager) {
+        switch central.state {
+            case .poweredOff:
+                peripheralManager.stopAdvertising()
+                print("Bluetooth is OFF")
+                break;
+            case .poweredOn:
+                // startAdvertising()
+                print("Bluetooth is ON")
+                break;
+            case .resetting:
+                print("Bluetooth is resetting")
+                break;
+            case .unauthorized:
+                print("Bluetooth is unauthorized")
+                break;
+            case .unsupported:
+                print("Bluetooth is unsupported")
+                break;
+            case .unknown:
+                print("Bluetooth state is unknown")
+                break;
+            
+            
+        @unknown default:
+            print("Bluetooth is in some other state: " + central.state.rawValue.description)
+        }
+        print("Current state");
+        print(central.state);
+        
+        // startAdvertising()
+
+    }
+    
     private var monitor = NWPathMonitor();
     private var requestCounter : Int = 0;
     private var lastData : String?;
     private var currentWebView: WKWebView?;
     private var bleService : CBMutableService?;
-    private var studentCharacteristic: CBMutableCharacteristic = CBMutableCharacteristic(type: studentGuid,
-                                                                                         properties: [.notify, .read, .write ],
-                                                                                         value: nil, permissions: [.readable, .writeable ]);
 
     public func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
         switch peripheral.state {
-            case .poweredOff:
-                peripheralManager.stopAdvertising();
-                break;
-            case .unknown:
-                print("Unknown")
-                break;
-            case .resetting:
-                print("Resetting")
-                break;
-            case .unsupported:
-                print("Unsurported")
+        case .poweredOff:
+            peripheral.stopAdvertising();
+            break;
+        case .unknown:
+            print("Unknown")
+            break;
+        case .resetting:
+            print("Resetting")
+            break;
+        case .unsupported:
+            print("Unsurported")
             return;
-            case .unauthorized:
-                print("Unauthorized")
+        case .unauthorized:
+            print("Unauthorized")
             return;
-            case .poweredOn:
-                print("Powered On")
-                break;
-            @unknown default:
-                print("Something else" + peripheral.state.rawValue.description)
+        case .poweredOn:
+            startAdvertising();
+            print("Powered On")
+            break;
+        @unknown default:
+            print("Something else" + peripheral.state.rawValue.description)
             return;
         }
         print("Current state");
         print(peripheral.state);
-                
-        let myService =  CBMutableService(type: service, primary: true)
-    
-        myService.characteristics = [studentCharacteristic]
-        self.bleService = myService;
         
-        peripheralManager.add(myService);
-        
-        peripheralManager.publishL2CAPChannel(withEncryption: true)
-        startAdvertising()
         
     }
-    public func peripheralManager(_ peripheral: CBPeripheralManager, didOpen channel: CBL2CAPChannel?, error: (any Error)?) {
+    nonisolated public func peripheralManager(_ peripheral: CBPeripheralManager, didOpen channel: CBL2CAPChannel?, error: (any Error)?) {
         print("Opened channel");
     }
     
@@ -111,33 +137,33 @@ open class WBManager: NSObject,
             return;
         }
         /*let response = ("Message from \(UIDevice.current.name) \(UIDevice.current.systemName) - \(self.requestCounter) battery: \(UIDevice.current.batteryLevel)").data(using: .utf8);
-        
-        request.value = response;*/
+         
+         request.value = response;*/
         //peripheral.respond(to: request, withResult: .attributeNotFound)
     }
-    public func peripheralManager(_ peripheral: CBPeripheralManager,
-                               central: CBCentral,
-                           didSubscribeTo characteristic: CBCharacteristic) {
+    nonisolated public func peripheralManager(_ peripheral: CBPeripheralManager,
+                                              central: CBCentral,
+                                              didSubscribeTo characteristic: CBCharacteristic) {
         peripheral.setDesiredConnectionLatency(.low, for: central);
     }
     public func peripheralManager(_ peripheral: CBPeripheralManager, didAdd service: CBService, error: (any Error)?) {
         print("Got Add request" + service.description);
         if let webView = self.currentWebView {
             webView.evaluateJavaScript("window.serverConnection.externalBluetoothConnected = false;");
-
+            
         }
         //self.currentWebView.evaluateJavaScript("")
     }
     
     public func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveWrite requests: [CBATTRequest]) {
-        //print("Got write request" + requests.description);
+        print("Got write request" + requests.description);
         if let webView = self.currentWebView {
             webView.evaluateJavaScript("window.bluetoothEnabled = true; window.serverConnection.externalBluetoothConnected = true;");
-
+            
         }
         var matchedRequest: CBATTRequest? = nil;
         for req in requests {
-            if(req.characteristic != studentCharacteristic) {
+            if(req.characteristic.uuid != studentCharacteristic.uuid) {
                 continue;
             }
             guard let value = req.value else {
@@ -148,11 +174,11 @@ open class WBManager: NSObject,
             //assert(req.offset == 0 && value.count == 1)
             //ctrlCharacteristic.value = value
             /*do {
-                let compressedData = try (value as NSData).compressed(using: .zlib)
-                // use your compressed data
-            } catch {
-                print("Error cannot decompress message");
-            }*/
+             let compressedData = try (value as NSData).compressed(using: .zlib)
+             // use your compressed data
+             } catch {
+             print("Error cannot decompress message");
+             }*/
             var decompressedData: Data = value;
             if(value.isGzipped) {
                 decompressedData = try! value.gunzipped();
@@ -164,19 +190,19 @@ open class WBManager: NSObject,
             }
             print("received data: [[" + recievedData + "]]");
             /*let array = value.withUnsafeBytes {
-                $0.load(as: UInt8.self)
-                //[UInt8](UnsafeBufferPointer(start: $0, count: value.count))
-            }
-            let recievedData = String(bytes: array, encoding: String.Encoding.utf8);*/
+             $0.load(as: UInt8.self)
+             //[UInt8](UnsafeBufferPointer(start: $0, count: value.count))
+             }
+             let recievedData = String(bytes: array, encoding: String.Encoding.utf8);*/
             /*
-            if let realData = recievedData {
-                if let webView = self.currentWebView {
-                    webView.evaluateJavaScript("window.serverConnection.dispatchMessage(JSON.parse('" + realData + "'))")
-                    //webView.evaluateJavaScript("alert('" + realData + "')");
-                }
-                print(realData);
-            }
-            */
+             if let realData = recievedData {
+             if let webView = self.currentWebView {
+             webView.evaluateJavaScript("window.serverConnection.dispatchMessage(JSON.parse('" + realData + "'))")
+             //webView.evaluateJavaScript("alert('" + realData + "')");
+             }
+             print(realData);
+             }
+             */
             //_delegate.sending(byte != 0)
         }
         if let match = matchedRequest {
@@ -187,7 +213,8 @@ open class WBManager: NSObject,
         }
     }
     
-    public func peripheralManagerDidStartAdvertising(_ peripheral: CBPeripheralManager, error: (any Error)?) {
+    nonisolated public func peripheralManagerDidStartAdvertising(_ peripheral: CBPeripheralManager, error: (any Error)?) {
+
         if let error = error {
             print("Advertising fail: \(error)")
             return;
@@ -196,7 +223,7 @@ open class WBManager: NSObject,
         
         
     }
-    public func peripheralManager(
+    nonisolated public func peripheralManager(
         _ peripheral: CBPeripheralManager,
         didPublishL2CAPChannel PSM: CBL2CAPPSM,
         error: (any Error)?
@@ -205,8 +232,16 @@ open class WBManager: NSObject,
     }
     func startAdvertising() {
         //messageLabel.text = "Advertising Data"
-        
-        peripheralManager.startAdvertising([CBAdvertisementDataLocalNameKey : "RSI Student Side", CBAdvertisementDataServiceUUIDsKey :     [service], description: "RSI Student"])
+        if(self.bleService == nil) {
+            let myService =  CBMutableService(type: service, primary: true);
+            myService.characteristics = [studentCharacteristic]
+            self.bleService = myService;
+            peripheralManager.add(myService);
+            
+            peripheralManager.publishL2CAPChannel(withEncryption: true)
+            peripheralManager.startAdvertising([CBAdvertisementDataLocalNameKey : "RSI Student Side", CBAdvertisementDataServiceUUIDsKey :     [service], description: "RSI Student"])
+
+        }
         print("Started Advertising " + service.uuidString)
     }
 
@@ -281,11 +316,6 @@ open class WBManager: NSObject,
         self.triage(transaction: trans)
     }
 
-    // MARK: - CBCentralManagerDelegate
-    public func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        NSLog("Bluetooth is \(central.state == CBManagerState.poweredOn ? "ON" : "OFF")")
-    }
-    
     public func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
 
         if let filters = self.filters,
@@ -390,8 +420,9 @@ open class WBManager: NSObject,
             if let webView = transaction.webView {
                 self.currentWebView = webView;
                 //webView.evaluateJavaScript("window.serverConnection.dispatchMessage(JSON.parse(`\(transaction.messageData)`))");
-                let compressedData: Data = try! transaction.jsonData.data(using: .utf8)!.gzipped()
-                self.peripheralManager.updateValue(compressedData, for: studentCharacteristic, onSubscribedCentrals: nil);
+                let characteristic = studentCharacteristic;
+                let compressedData: Data = try! transaction.jsonData.data(using: .utf8)!.gzipped();
+                self.peripheralManager.updateValue(compressedData, for: characteristic, onSubscribedCentrals: nil);
                 let currentData = "\(transaction.jsonData)";
                 /*
                 let sval = currentData.data(using: .utf8);

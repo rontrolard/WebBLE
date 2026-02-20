@@ -17,9 +17,6 @@ class ConsoleViewContainerController: UIViewController {
     private var _wbLogManager: WBLogManager?
 
     deinit {
-        if let lm = self._wbLogManager {
-            lm.removeObserver(self, forKeyPath: "aLogIsSelected")
-        }
     }
 
     var consoleScrollViewHeightAtStartOfGesture: CGFloat? = nil
@@ -50,8 +47,7 @@ class ConsoleViewContainerController: UIViewController {
     @IBAction func copyLogsToClipboard(_ sender: UITapGestureRecognizer) {
         let gpb = UIPasteboard.general
         let text = self.wbLogManager.selectedLogText()
-        gpb.string = text
-        FlashAnimation(withView: self.copySuccessIndication).go()
+        gpb.string = text        
     }
     @IBAction func dividerDrag(_ sender: UIPanGestureRecognizer) {
         let yTranslation = sender.translation(in: sender.view).y
@@ -99,7 +95,9 @@ class ConsoleViewContainerController: UIViewController {
     // MARK: - KVO
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "aLogIsSelected" {
-            self._configureImageView()
+            Task {
+                await self._configureImageView()
+            }
         }
     }
     private func _configureImageView() {
