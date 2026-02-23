@@ -15,8 +15,15 @@
 
 import UIKit
 import WebKit
-
-class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegate, WKUIDelegate, UIScrollViewDelegate, ConsoleToggler {
+import Foundation
+var isTestFlight: Bool {
+   #if DEBUG
+   return false // Debug builds are not TestFlight
+   #else
+   return Bundle.main.appStoreReceiptURL?.lastPathComponent == "sandboxReceipt"
+   #endif
+}
+class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegate, WKUIDelegate, UIScrollViewDelegate {
 
     enum prefKeys: String {
         case bookmarks
@@ -93,8 +100,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
             return
         }
 
-        self.bookmarksManager.addBookmarks([WBBookmark(title: title, url: url)])
-        FlashAnimation(withView: self.tick).go()
+        self.bookmarksManager.addBookmarks([WBBookmark(title: title, url: url)])        
     }
     @IBAction func goForward() {
         NSLog("Go forward")
@@ -143,6 +149,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
             )
         }
     }
+
 
     // MARK: - Home bar indicator control
     override var prefersHomeIndicatorAutoHidden: Bool {
@@ -199,6 +206,14 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         // let lastLocation: String = "https://stage.riversidescore.com/examinee"
         //let lastLocation: String = "https://192.168.88.218:8443/examineeOffline";
         // let lastLocation: String = "https://marvin.digitalconcrete.net/examinee";
+        var lastLocation: String = "https://riversidescore.com/examinee"
+        
+        if isTestFlight {
+            lastLocation = "https://stage.riversidescore.com/examinee"
+        } else {
+           print("Running from App Store")
+        }
+
         let lastLocation: String = "https://clinical-wjv-qa.rsiapps.com/examinee"
 
         self.loadLocation(lastLocation)
@@ -316,17 +331,27 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
             NSLog("Unexpected change with either no keyPath or no change dictionary!")
             return
         }
-
+        
         switch defKeyPath {
         case "canGoBack":
-            self.goBackButton.isEnabled = defChange[NSKeyValueChangeKey.newKey] as! Bool
+            let backEnabled = defChange[NSKeyValueChangeKey.newKey] as! Bool;
+            Task { @MainActor in
+                self.goBackButton.isEnabled = backEnabled
+            }
         case "canGoForward":
-            self.goForwardButton.isEnabled = defChange[NSKeyValueChangeKey.newKey] as! Bool
+            let forwardEnabled = defChange[NSKeyValueChangeKey.newKey] as! Bool;
+            Task { @MainActor in
+                self.goForwardButton.isEnabled = forwardEnabled
+            }
         case "navBarIsHidden":
             let navBarIsHidden = defChange[NSKeyValueChangeKey.newKey] as! Bool
-            self.shouldShowBars = !navBarIsHidden
+            Task { @MainActor in
+                self.shouldShowBars = !navBarIsHidden
+            }
         case "pickerIsShowing":
-            self._setExtraBarHiddenState()
+            Task { @MainActor in
+                self._setExtraBarHiddenState()
+            }
         default:
             NSLog("Unexpected change observed by ViewController: \(defKeyPath)")
         }

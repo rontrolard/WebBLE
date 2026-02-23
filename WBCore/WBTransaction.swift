@@ -128,7 +128,7 @@ class WBTransaction: Equatable, CustomStringConvertible {
     var completionHandlers = [(WBTransaction, Bool) -> Void]()
     var resolved: Bool = false
 
-    var sourceURL: URL? {
+    @MainActor var sourceURL: URL? {
         return self.webView?.url
     }
     
@@ -142,7 +142,7 @@ class WBTransaction: Equatable, CustomStringConvertible {
         self.webView = webView
         self.jsonData = jsonData
     }
-    convenience init?(withMessage message: WKScriptMessage) {
+    @MainActor convenience init?(withMessage message: WKScriptMessage) {
 
         guard
             let messageBody = message.body as? NSDictionary,
@@ -171,13 +171,13 @@ class WBTransaction: Equatable, CustomStringConvertible {
     func addCompletionHandler(_ handler: @escaping (WBTransaction, Bool) -> Void) {
         self.completionHandlers.append(handler)
     }
-    func resolveAsSuccess(withMessage message: String = "Success") {
+    @MainActor func resolveAsSuccess(withMessage message: String = "Success") {
         self.complete(success: true, object: message)
     }
-    func resolveAsSuccess(withObject object: Jsonifiable) {
+    @MainActor func resolveAsSuccess(withObject object: Jsonifiable) {
         self.complete(success: true, object: object)
     }
-    func resolveAsFailure(withMessage message: String) {
+    @MainActor func resolveAsFailure(withMessage message: String) {
         self.complete(success: false, object: message)
     }
 
@@ -195,7 +195,7 @@ class WBTransaction: Equatable, CustomStringConvertible {
     /*
      * ========== Private methods ==========
      */
-    private func complete(success: Bool, object: Jsonifiable) {
+    @MainActor private func complete(success: Bool, object: Jsonifiable) {
         if self.resolved {
             NSLog("Attempt to re-resolve transaction \(self.id) ignored")
             return

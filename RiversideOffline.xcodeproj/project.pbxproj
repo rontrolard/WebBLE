@@ -33,7 +33,6 @@
 		5A95DDF81E0C080C00DFE26B /* WBWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A95DDF71E0C080B00DFE26B /* WBWebView.swift */; };
 		5AA79DDD1FB3AA0C00A4FCB4 /* WBBluetoothUUID.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AA79DDC1FB3AA0C00A4FCB4 /* WBBluetoothUUID.js */; };
 		5AC47CA61E2BE57000BCAE82 /* Tick@480.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AC47CA51E2BE57000BCAE82 /* Tick@480.png */; };
-		5AC47CA81E2CCF2F00BCAE82 /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC47CA71E2CCF2F00BCAE82 /* Animations.swift */; };
 		5AC676FC221CA557007B1562 /* ErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC676FB221CA557007B1562 /* ErrorViewController.swift */; };
 		5AC7ECAB233D0F9700CE7A2A /* Segues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC7ECAA233D0F9700CE7A2A /* Segues.swift */; };
 		5AC7ECAD233D177700CE7A2A /* WBPopUpPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC7ECAC233D177700CE7A2A /* WBPopUpPickerView.swift */; };
@@ -56,6 +55,7 @@
 		E44C18661A36203E00734F8B /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = E44C18641A36203E00734F8B /* LaunchScreen.xib */; };
 		E44C18721A36203E00734F8B /* BleBrowserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44C18711A36203E00734F8B /* BleBrowserTests.swift */; };
 		E4A898512E0B1FA200D3317F /* Gzip in Frameworks */ = {isa = PBXBuildFile; productRef = E4A898502E0B1FA200D3317F /* Gzip */; };
+		E6146ADE2F48FC43008F27D2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6146ADD2F48FC43008F27D2 /* SceneDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,7 +97,6 @@
 		5A9B90F81E1FBCFD00AEDC07 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		5AA79DDC1FB3AA0C00A4FCB4 /* WBBluetoothUUID.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = WBBluetoothUUID.js; sourceTree = "<group>"; };
 		5AC47CA51E2BE57000BCAE82 /* Tick@480.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Tick@480.png"; sourceTree = "<group>"; };
-		5AC47CA71E2CCF2F00BCAE82 /* Animations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Animations.swift; sourceTree = "<group>"; };
 		5AC676FB221CA557007B1562 /* ErrorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorViewController.swift; sourceTree = "<group>"; };
 		5AC7ECAA233D0F9700CE7A2A /* Segues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Segues.swift; sourceTree = "<group>"; };
 		5AC7ECAC233D177700CE7A2A /* WBPopUpPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WBPopUpPickerView.swift; sourceTree = "<group>"; };
@@ -126,6 +125,7 @@
 		E44C18701A36203E00734F8B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E44C18711A36203E00734F8B /* BleBrowserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BleBrowserTests.swift; sourceTree = "<group>"; };
 		E611E69A2DB6B4CF00A0CEFC /* WebBLE.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = WebBLE.entitlements; path = ../WebBLE.entitlements; sourceTree = "<group>"; };
+		E6146ADD2F48FC43008F27D2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -179,7 +179,6 @@
 				5A10929C2168D5B6002CC973 /* Console */,
 				5AFC780322ECDD410071E792 /* Polyfill */,
 				5ADE336D23663353007E6AD7 /* Images.xcassets */,
-				5AC47CA71E2CCF2F00BCAE82 /* Animations.swift */,
 				5AC676FB221CA557007B1562 /* ErrorViewController.swift */,
 				5AC7ECAA233D0F9700CE7A2A /* Segues.swift */,
 				5AC7ECAC233D177700CE7A2A /* WBPopUpPickerView.swift */,
@@ -240,6 +239,7 @@
 		E44C18581A36203E00734F8B /* RiversideOffline */ = {
 			isa = PBXGroup;
 			children = (
+				E6146ADD2F48FC43008F27D2 /* SceneDelegate.swift */,
 				E611E69A2DB6B4CF00A0CEFC /* WebBLE.entitlements */,
 				5A10929D2168D5F4002CC973 /* Bookmarks */,
 				5A5D621521EBA83D00E417DC /* NavigationViewController.swift */,
@@ -404,7 +404,6 @@
 				BB4DBE651C97F577000D2C35 /* WBTransaction.swift in Sources */,
 				5AC7ECAB233D0F9700CE7A2A /* Segues.swift in Sources */,
 				5AC7ECAD233D177700CE7A2A /* WBPopUpPickerView.swift in Sources */,
-				5AC47CA81E2CCF2F00BCAE82 /* Animations.swift in Sources */,
 				5AC8067D21655B5E00AA5176 /* DividerView.swift in Sources */,
 				5A7579EA2151588B003F0CEA /* ConsoleViewController.swift in Sources */,
 				5A5D6404216C9F9300BCD722 /* WBLog.swift in Sources */,
@@ -415,6 +414,7 @@
 				5A5D621621EBA83D00E417DC /* NavigationViewController.swift in Sources */,
 				5A10929B2168D599002CC973 /* ConsoleViewContainerController.swift in Sources */,
 				5A95DDF81E0C080C00DFE26B /* WBWebView.swift in Sources */,
+				E6146ADE2F48FC43008F27D2 /* SceneDelegate.swift in Sources */,
 				5A7579EF21579E0E003F0CEA /* ConsoleView.swift in Sources */,
 				5A1A8E1628009CD200271575 /* URLTextField.swift in Sources */,
 				5AC676FC221CA557007B1562 /* ErrorViewController.swift in Sources */,
@@ -524,7 +524,8 @@
 				SDKROOT = iphoneos;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 2;
+				VALIDATE_PRODUCT = YES;
 			};
 			name = Debug;
 		};
@@ -562,6 +563,7 @@
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -574,11 +576,12 @@
 				INFOPLIST_FILE = RiversideOffline/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 2;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -601,12 +604,12 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.7.4;
+				MARKETING_VERSION = 1.8.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.riversideinsights.RiversideOffline-QA";
 				PRODUCT_NAME = RiversideScoreOffline;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Debug;
 		};
@@ -627,12 +630,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.7.4;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.riversideinsights.RiversideOffline-QA";
-				PRODUCT_NAME = RiversideScoreOffline;
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				MARKETING_VERSION = 1.8.2;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Release;
 		};

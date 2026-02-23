@@ -13,7 +13,7 @@ class ConsoleLogViewController: UIViewController {
         willSet { self._unsubscribeFromLogChanges() }
         didSet { self._subscribeToLogChanges() }
     }
-
+    @MainActor
     deinit {
         self._unsubscribeFromLogChanges()
     }
@@ -24,9 +24,6 @@ class ConsoleLogViewController: UIViewController {
 
     // MARK: - KVO
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if object as? WBLog === self.log {
-            self._updateView()
-        }
     }
 
     // MARK: Internal

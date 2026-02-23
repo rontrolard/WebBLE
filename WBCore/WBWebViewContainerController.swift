@@ -12,8 +12,8 @@ import WebKit
 protocol ConsoleToggler {
     func toggleConsole()
 }
-
-class WBWebViewContainerController: UIViewController, WKNavigationDelegate, WKUIDelegate, WBPicker {
+@MainActor
+class WBWebViewContainerController: UIViewController, WKNavigationDelegate, WKUIDelegate, @MainActor WBPicker {
     
     enum prefKeys: String {
         case lastLocation
@@ -101,16 +101,24 @@ class WBWebViewContainerController: UIViewController, WKNavigationDelegate, WKUI
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         //self._maybeShowErrorUI(error)
     }
-    
-    // MARK: - WKUIDelegate
-    func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: (@escaping () -> Void)) {
-        let alertController = UIAlertController(
-            title: frame.request.url?.host, message: message,
-            preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(
-            title: "OK", style: .default, handler: {_ in completionHandler()}))
-        self.present(alertController, animated: true, completion: nil)
+    private func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedBy frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
+            let alertController = UIAlertController(
+                title: frame.request.url?.host, message: message,
+                preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(
+                title: "OK", style: .default, handler: {_ in completionHandler()}))
+            self.present(alertController, animated: true, completion: nil)
+
     }
+    // MARK: - WKUIDelegate
+//    func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: (@escaping () -> Void)) {
+//        let alertController = UIAlertController(
+//            title: frame.request.url?.host, message: message,
+//            preferredStyle: .alert)
+//        alertController.addAction(UIAlertAction(
+//            title: "OK", style: .default, handler: {_ in completionHandler()}))
+//        self.present(alertController, animated: true, completion: nil)
+//    }
     
     // MARK: - Segue handling
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -159,15 +167,18 @@ class WBWebViewContainerController: UIViewController, WKNavigationDelegate, WKUI
         switch defKeyPath {
         case "estimatedProgress":
             let estimatedProgress = defChange[NSKeyValueChangeKey.newKey] as! Double
-            let fwidth = self.loadingProgressContainer.frame.size.width
-            let newWidth: CGFloat = CGFloat(estimatedProgress) * fwidth
-            print("estimatedProgress: \(estimatedProgress)")
-            if newWidth < self.loadingProgressView.frame.size.width {
-                self.loadingProgressView.frame.size.width = newWidth
-            } else {
-                UIView.animate(withDuration: 0.2, animations: {
+            Task { @MainActor in
+                let fwidth = self.loadingProgressContainer.frame.size.width
+                let newWidth: CGFloat = CGFloat(estimatedProgress) * fwidth
+                print("estimatedProgress: \(estimatedProgress)")
+                
+                if newWidth < fwidth {
                     self.loadingProgressView.frame.size.width = newWidth
-                })
+                } else {
+                    UIView.animate(withDuration: 0.2, animations: {
+                        self.loadingProgressView.frame.size.width = newWidth
+                    })
+                }
             }
         default:
             NSLog("Unexpected change observed by ViewController: \(defKeyPath)")

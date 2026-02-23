@@ -146,12 +146,23 @@ class WBWebView: WKWebView, WKNavigationDelegate {
     public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         self._navDelegates.forEach{$0.webView?(webView, didStartProvisionalNavigation: navigation)}
     }
-    public func webView(_ webView: WKWebView, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
-        guard let serverTrust = challenge.protectionSpace.serverTrust else { return completionHandler(.useCredential, nil) }
-        let exceptions = SecTrustCopyExceptions(serverTrust)
-        SecTrustSetExceptions(serverTrust, exceptions);
-        completionHandler(.useCredential, URLCredential(trust: serverTrust));
+    public func webView(
+        _ webView: WKWebView,
+        didReceive challenge: URLAuthenticationChallenge,
+        completionHandler: @escaping @MainActor @Sendable (URLSession.AuthChallengeDisposition, URLCredential?) -> Void
+    ) {
+            guard let serverTrust = challenge.protectionSpace.serverTrust else { return completionHandler(.useCredential, nil) }
+            let exceptions = SecTrustCopyExceptions(serverTrust)
+            SecTrustSetExceptions(serverTrust, exceptions);
+            completionHandler(.useCredential, URLCredential(trust: serverTrust));
+
     }
+//    public func webView(_ webView: WKWebView, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+//        guard let serverTrust = challenge.protectionSpace.serverTrust else { return completionHandler(.useCredential, nil) }
+//        let exceptions = SecTrustCopyExceptions(serverTrust)
+//        SecTrustSetExceptions(serverTrust, exceptions);
+//        completionHandler(.useCredential, URLCredential(trust: serverTrust));
+//    }
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         self._enableBluetoothInView()
